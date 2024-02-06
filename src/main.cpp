@@ -1,4 +1,5 @@
 #include "main.h"
+using namespace std;
 
 
 /////
@@ -9,16 +10,16 @@
 
 // Chassis constructor
 Drive chassis (
-  // Left Chassis Ports (negative port will reverse it!)
+  // Left Chassis Ports (negati	cve port will reverse it!)
   //   the first port is the sensored port (when trackers are not used!)
-  {-19, 14, -4}
+  {-6, -11, 7}
 
   // Right Chassis Ports (negative port will reverse it!)
   //   the first port is the sensored port (when trackers are not used!)
-  ,{9, -11, 12}
+  ,{-4, 20, 12}	
 
   // IMU Port
-  ,4
+  ,15
 
   // Wheel Diameter (Remember, 4" wheels are actually 4.125!)
   //    (or tracking wheel diameter)
@@ -50,6 +51,84 @@ Drive chassis (
   // ,1
 );
 
+enum class autonStates { // the possible auton selections
+	off,
+	RedDescore,
+	RedGoalSide,
+	BlueDescore,
+	BlueGoalSide,
+	RedElims,
+	BlueElims,
+	Skills,
+	test
+};
+
+
+autonStates autonSelection = autonStates::off;
+
+static lv_res_t RedLeftBtnAction(lv_obj_t *btn) {
+	autonSelection = autonStates::RedDescore;
+	std::cout << pros::millis() << "RedLeft" << std::endl;
+	return LV_RES_OK;
+}
+
+static lv_res_t RedRightBtnAction(lv_obj_t *btn) {
+	autonSelection = autonStates::RedGoalSide;
+	std::cout << pros::millis() << "RedRight" << std::endl;
+	return LV_RES_OK;
+}
+
+static lv_res_t BlueLeftBtnAction(lv_obj_t *btn) {
+	autonSelection = autonStates::BlueDescore;
+	std::cout << pros::millis() << "BlueLeft" << std::endl;
+	return LV_RES_OK;
+}
+
+static lv_res_t BlueRightBtnAction(lv_obj_t *btn) {
+	autonSelection = autonStates::BlueGoalSide;
+	std::cout << pros::millis() << "BlueRight" << std::endl;
+	return LV_RES_OK;
+}
+
+static lv_res_t RedSoloWPBtnAction(lv_obj_t *btn) {
+	autonSelection = autonStates::RedElims;
+	std::cout << pros::millis() << "RedSoloWP" << std::endl;
+	return LV_RES_OK;
+}
+
+static lv_res_t BlueSoloWPBtnAction(lv_obj_t *btn) {
+	autonSelection = autonStates::BlueElims;
+	std::cout << pros::millis() << "BlueSoloWP" << std::endl;
+	return LV_RES_OK;
+}
+
+static lv_res_t SkillsBtnAction(lv_obj_t *btn) {
+	autonSelection = autonStates::Skills;
+	std::cout << pros::millis() << "Skills" << std::endl;
+	return LV_RES_OK;
+}
+
+static lv_res_t ResetBtnAction(lv_obj_t *btn) {
+	imu.reset();
+
+	leftMotors.tare_position();
+	rightMotors.tare_position();
+
+	while (imu.is_calibrating() and pros::millis() < 5000)
+	{
+		pros::delay(10);
+	}
+	if (pros::millis() < 5000) std::cout << pros::millis() << ": finished calibrating!" << std::endl;
+	return LV_RES_OK;
+}
+
+static lv_res_t noAutonBtnAction(lv_obj_t *btn) {
+	autonSelection = autonStates::off;
+	std::cout << pros::millis() << "None" << std::endl;
+	return LV_RES_OK;
+}
+
+
 
 
 /**
@@ -60,9 +139,124 @@ Drive chassis (
  */
 void initialize() {
   // Print our branding over your terminal :D
-  ez::print_ez_template();
   
   pros::delay(500); // Stop the user from doing anything while legacy ports configure.
+
+  imu.reset();
+	
+	lv_theme_t *th = lv_theme_alien_init(360, NULL); //Set a HUE value and keep font default RED
+	lv_theme_set_current(th);
+
+	// create a tab view object
+	std::cout << pros::millis() << ": creating gui..." << std::endl;
+	lv_obj_t *tabview = lv_tabview_create(lv_scr_act(), NULL);
+
+	//button layout
+	lv_obj_t *RedTab = lv_tabview_add_tab(tabview, "Red");
+	lv_obj_t *BlueTab = lv_tabview_add_tab(tabview, "Blue");
+	lv_obj_t *SkillsTab = lv_tabview_add_tab(tabview, "Skills");
+	lv_obj_t *OffTab = lv_tabview_add_tab(tabview, "Turn Off");
+	
+
+	// Red tab
+	lv_obj_t *RedLeftBtn = lv_btn_create(RedTab, NULL);
+	lv_obj_t *labelRedLeft = lv_label_create(RedLeftBtn, NULL);
+
+	lv_obj_t *RedRightBtn = lv_btn_create(RedTab, NULL);
+	lv_obj_t *labelRedRight = lv_label_create(RedRightBtn, NULL);
+
+	lv_obj_t *RedSoloWPBtn = lv_btn_create(RedTab, NULL);
+	lv_obj_t *labelRedSolo = lv_label_create(RedSoloWPBtn, NULL);
+
+	lv_label_set_text(labelRedLeft, "RedDescore");
+	lv_btn_set_action(RedLeftBtn, LV_BTN_ACTION_CLICK, RedLeftBtnAction);
+	lv_obj_set_size(RedLeftBtn, 150, 50);
+	lv_btnm_set_toggle(RedLeftBtn, true, 1);
+	lv_obj_set_pos(RedLeftBtn, 0, 0);
+	lv_obj_align(RedLeftBtn, NULL, LV_ALIGN_CENTER, -150, -5);
+
+	lv_label_set_text(labelRedRight, "RedGoalSide");
+	lv_btn_set_action(RedRightBtn, LV_BTN_ACTION_CLICK, RedRightBtnAction);
+	lv_obj_set_size(RedRightBtn, 150, 50);
+	lv_btnm_set_toggle(RedRightBtn, true, 1);
+	lv_obj_set_pos(RedRightBtn, 0, 0);
+	lv_obj_align(RedRightBtn, NULL, LV_ALIGN_CENTER, 0, 0);
+
+	lv_label_set_text(labelRedSolo, "RedElims");
+	lv_btn_set_action(RedSoloWPBtn, LV_BTN_ACTION_CLICK, RedSoloWPBtnAction);
+	lv_obj_set_size(RedSoloWPBtn, 150, 50);
+	lv_btnm_set_toggle(RedSoloWPBtn, true, 1);
+	lv_obj_set_pos(RedSoloWPBtn, 0, 0);
+	lv_obj_align(RedSoloWPBtn, NULL, LV_ALIGN_CENTER, 150, 12.5);
+	
+
+	// Blue tab
+	lv_obj_t *BlueLeftBtn = lv_btn_create(BlueTab, NULL);
+	lv_obj_t *labelBlueLeft = lv_label_create(BlueLeftBtn, NULL);
+
+	lv_obj_t *BlueRightBtn = lv_btn_create(BlueTab, NULL);
+	lv_obj_t *labelBlueRight = lv_label_create(BlueRightBtn, NULL);
+
+	lv_obj_t *BlueSoloWPBtn = lv_btn_create(BlueTab, NULL);
+	lv_obj_t *labelBlueSolo = lv_label_create(BlueSoloWPBtn, NULL);
+
+	lv_label_set_text(labelBlueLeft, "BlueDescore");
+	lv_btn_set_action(BlueLeftBtn, LV_BTN_ACTION_CLICK, BlueLeftBtnAction);
+	lv_obj_set_size(BlueLeftBtn, 150, 50);
+	lv_btnm_set_toggle(BlueLeftBtn, true, 1);
+	lv_obj_set_pos(BlueLeftBtn, 0, 0);
+	lv_obj_align(BlueLeftBtn, NULL, LV_ALIGN_CENTER, -150, -5);
+
+	lv_label_set_text(labelBlueRight, "BlueGoalSide");
+	lv_btn_set_action(BlueRightBtn, LV_BTN_ACTION_CLICK, BlueRightBtnAction);
+	lv_obj_set_size(BlueRightBtn, 150, 50);
+	lv_btnm_set_toggle(BlueRightBtn, true, 1);
+	lv_obj_set_pos(BlueRightBtn, 0, 0);
+	lv_obj_align(BlueRightBtn, NULL, LV_ALIGN_CENTER, 0, 0);
+
+	lv_label_set_text(labelBlueSolo, "BlueElims");
+	lv_btn_set_action(BlueSoloWPBtn, LV_BTN_ACTION_CLICK, BlueSoloWPBtnAction);
+	lv_obj_set_size(BlueSoloWPBtn, 150, 50);
+	lv_btnm_set_toggle(BlueSoloWPBtn, true, 1);
+	lv_obj_set_pos(BlueSoloWPBtn, 0, 0);
+	lv_obj_align(BlueSoloWPBtn, NULL, LV_ALIGN_CENTER, 150, 12.5);
+	
+
+	//DiagonalDouble tab
+	lv_obj_t *OffBtn = lv_btn_create(OffTab, NULL);
+	lv_obj_t *Offlabel = lv_label_create(OffBtn, NULL);
+	lv_label_set_text(Offlabel, "Turn Off");
+	lv_btn_set_action(OffBtn, LV_BTN_ACTION_CLICK, noAutonBtnAction);
+	lv_obj_set_size(OffBtn, 450, 50);
+	lv_btnm_set_toggle(OffBtn, true, 1);
+	lv_obj_set_pos(OffBtn, 0, 100);
+	lv_obj_align(OffBtn, NULL, LV_ALIGN_CENTER, 0, 0);
+
+
+	// skills tab
+	lv_obj_t *SkillsBtn = lv_btn_create(SkillsTab, NULL);
+	lv_obj_t *skillslabel = lv_label_create(SkillsBtn, NULL);
+
+	lv_label_set_text(skillslabel, "Skills");
+	lv_btn_set_action(SkillsBtn, LV_BTN_ACTION_CLICK, SkillsBtnAction);
+	lv_obj_set_size(SkillsBtn, 450, 50);
+	lv_btnm_set_toggle(SkillsBtn, true, 1);
+	lv_obj_set_pos(SkillsBtn, 0, 100);
+	lv_obj_align(SkillsBtn, NULL, LV_ALIGN_CENTER, 0, 0);
+
+	//reset btn
+	lv_obj_t *ResetBtn = lv_btn_create(tabview, NULL);
+	lv_obj_t *ResetLabel = lv_label_create(ResetBtn, NULL);
+
+	lv_label_set_text(ResetLabel, "Reset");
+	lv_btn_set_action(ResetBtn, LV_BTN_ACTION_CLICK, ResetBtnAction);
+	lv_obj_set_size(ResetBtn, 250, 50);
+	lv_btnm_set_toggle(ResetBtn, true, 1);
+	lv_obj_set_pos(ResetBtn, 0, 100);
+	lv_obj_align(ResetBtn, NULL, LV_ALIGN_CENTER, 0, 50);
+
+	chassis.set_active_brake(0); // Sets the active brake kP. We recommend 0.1.
+
 
   // Configure your chassis controls
   chassis.toggle_modify_curve_with_controller(true); // Enables modifying the controller curve with buttons on the joysticks
@@ -76,19 +270,10 @@ void initialize() {
   // chassis.set_right_curve_buttons(pros::E_CONTROLLER_DIGITAL_Y,    pros::E_CONTROLLER_DIGITAL_A);
 
   // Autonomous Selector using LLEMU
-  ez::as::auton_selector.add_autons({
-    Auton("Example Drive\n\nDrive forward and come back.", drive_example),
-    Auton("Example Turn\n\nTurn 3 times.", turn_example),
-    Auton("Drive and Turn\n\nDrive forward, turn, come back. ", drive_and_turn),
-    Auton("Drive and Turn\n\nSlow down during drive.", wait_until_change_speed),
-    Auton("Swing Example\n\nSwing, drive, swing.", swing_example),
-    Auton("Combine all 3 movements", combining_movements),
-    Auton("Interference\n\nAfter driving forward, robot performs differently if interfered or not.", interfered_example),
-  });
+  
 
   // Initialize chassis and auton selector
   chassis.initialize();
-  ez::as::initialize();
 }
 
 
@@ -99,7 +284,8 @@ void initialize() {
  * the robot is enabled, this task will exit.
  */
 void disabled() {
-  // . . .
+Hang1.set_value(false);
+Hang2.set_value(false);
 }
 
 
@@ -137,6 +323,39 @@ void autonomous() {
   chassis.set_drive_brake(MOTOR_BRAKE_HOLD); // Set motors to hold.  This helps autonomous consistency.
 
   ez::as::auton_selector.call_selected_auton(); // Calls selected auton from autonomous selector.
+
+  if(autonSelection == autonStates::off) {
+		autonSelection = autonStates::test;
+	}	
+
+	switch(autonSelection) {
+		case autonStates::RedDescore:
+			RedDescore();
+			break;
+		case autonStates::RedGoalSide:
+			RedGoalSide();
+			break;
+		case autonStates::BlueDescore:
+			BlueDescore();
+			break;
+		case autonStates::BlueGoalSide:
+			BlueGoalSide();
+			break;
+		case autonStates::RedElims:
+			RedElims();
+			break;
+		case autonStates::BlueElims:
+			BlueElims();
+			break;
+		case autonStates::Skills:
+			Skills();
+			break;
+		case autonStates::test:
+			test();
+			break;
+		default:
+			break;
+	}
 }
 
 
@@ -156,17 +375,20 @@ void autonomous() {
  */
 
 bool wings = false;
-bool blocker = false;
+bool Hang = false;
+bool Vwings = false;
 void opcontrol() {
   // This is preference to what you like to drive on.
   chassis.set_drive_brake(MOTOR_BRAKE_COAST);
-  pros::Motor intake(21);
-  pros::Motor catapult(5);
-  pros::ADIDigitalOut wing1('A', false);
-  pros::ADIDigitalOut wing2('B', false);
-  pros::ADIDigitalOut blocker1('C', true);
-  pros::ADIDigitalOut blocker2('D', true);
-  pros::ADIDigitalOut blocker2ndStage('H', true);
+  pros::Motor intake(14);
+  pros::Motor catapult(13);
+  pros::ADIDigitalOut wing1('C', false);
+  pros::ADIDigitalOut wing2('F', false);
+  pros::ADIDigitalOut Hang1('G', false);
+  pros::ADIDigitalOut Hang2('A', false);
+  pros::ADIDigitalOut Vwing1('E', false);
+  pros::ADIDigitalOut Vwing2('B', false);
+  pros::ADIDigitalOut SideHang('H', true);
   while (true) {
 
     chassis.tank(); // Tank control
@@ -189,10 +411,10 @@ void opcontrol() {
         intake.move_voltage(0);
     }
     // catapult
-    if(master.get_digital(DIGITAL_R1)){
+    if(master.get_digital(DIGITAL_LEFT)){
         catapult.move_voltage(12000);
     }
-    else if(master.get_digital(DIGITAL_R2)){
+    else if(master.get_digital(DIGITAL_RIGHT)){
         catapult.move_voltage(-12000);
     }
     else{
@@ -212,22 +434,32 @@ void opcontrol() {
           wings = false;
       }
     }
-    
-    // blocker code
-    if(master.get_digital_new_press(DIGITAL_Y)){
-      if(blocker == false) {
-          blocker1.set_value(true);
-          blocker2.set_value(true);
-          blocker2ndStage.set_value(true);
-          blocker = true;
+
+    if(master.get_digital_new_press(DIGITAL_UP)){
+      if(Vwings == false) {
+          Vwing1.set_value(true);
+          Vwing2.set_value(true);
+          Vwings = true;
       
-      } else if(blocker == true) {
-          blocker1.set_value(false);
-          blocker2.set_value(false);
-          blocker2ndStage.set_value(false);
-          blocker = false;
+      } else if(Vwings == true) {
+          Vwing1.set_value(false);
+          Vwing2.set_value(false);
+          Vwings = false;
       }
     }
+    // blocker code
+		if(master.get_digital_new_press(DIGITAL_B)) {
+      if(Hang == false){
+          Hang1.set_value(true);
+          Hang2.set_value(true);
+          Hang = true;
+      }
+      else if(Hang == true){
+        Hang1.set_value(false);
+        Hang2.set_value(false);
+        Hang = false;
+            }
+        }
     pros::delay(ez::util::DELAY_TIME); // This is used for timer calculations!  Keep this ez::util::DELAY_TIME
   }
 }

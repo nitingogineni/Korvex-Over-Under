@@ -84,17 +84,17 @@ void opcontrol(void);
 //#include <iostream>
 #endif
 
-#ifdef DEVICES
+#ifndef DEVICES
 #define DEVICES
 #include "devices.h"
 #endif 
 
-#ifdef BASICOP
+#ifndef BASICOP
 #define BASICOP
 #include "basicop.h"
 #endif 
 
-#ifdef AUTONS
+#ifndef AUTONS
 #define AUTONS
 #include "autons.hpp"
 #endif
