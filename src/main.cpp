@@ -12,14 +12,14 @@ using namespace std;
 Drive chassis (
   // Left Chassis Ports (negati	cve port will reverse it!)
   //   the first port is the sensored port (when trackers are not used!)
-  {-6, -11, 7}
+  {-16, -11, -3}
 
   // Right Chassis Ports (negative port will reverse it!)
   //   the first port is the sensored port (when trackers are not used!)
-  ,{-4, 20, 12}	
+  ,{12, 14, 5}	
 
   // IMU Port
-  ,15
+  ,8
 
   // Wheel Diameter (Remember, 4" wheels are actually 4.125!)
   //    (or tracking wheel diameter)
@@ -138,12 +138,11 @@ static lv_res_t noAutonBtnAction(lv_obj_t *btn) {
  * to keep execution time for this mode under a few seconds.
  */
 void initialize() {
+	
   // Print our branding over your terminal :D
   
-  pros::delay(500); // Stop the user from doing anything while legacy ports configure.
-
-  imu.reset();
-	
+	pros::delay(500); // Stop the user from doing anything while legacy ports configure.
+  	imu.reset();	
 	lv_theme_t *th = lv_theme_alien_init(360, NULL); //Set a HUE value and keep font default RED
 	lv_theme_set_current(th);
 
@@ -283,13 +282,11 @@ void initialize() {
  * the VEX Competition Switch, following either autonomous or opcontrol. When
  * the robot is enabled, this task will exit.
  */
+
 void disabled() {
-Hang1.set_value(false);
-Hang2.set_value(false);
+	Hang1.set_value(false);
+	Hang2.set_value(false);
 }
-
-
-
 /**
  * Runs after initialize(), and before autonomous when connected to the Field
  * Management System or the VEX Competition Switch. This is intended for
@@ -373,22 +370,23 @@ void autonomous() {
  * operator control task will be stopped. Re-enabling the robot will restart the
  * task, not resume it from where it left off.
  */
-
-bool wings = false;
-bool Hang = false;
-bool Vwings = false;
+bool wingleft = false;
+bool wingright = false;
+bool Rachet1 = false;
+bool Vwing1 = false;
+bool Phangs = false;
 void opcontrol() {
   // This is preference to what you like to drive on.
   chassis.set_drive_brake(MOTOR_BRAKE_COAST);
-  pros::Motor intake(14);
-  pros::Motor catapult(13);
-  pros::ADIDigitalOut wing1('C', false);
-  pros::ADIDigitalOut wing2('F', false);
-  pros::ADIDigitalOut Hang1('G', false);
-  pros::ADIDigitalOut Hang2('A', false);
-  pros::ADIDigitalOut Vwing1('E', false);
-  pros::ADIDigitalOut Vwing2('B', false);
-  pros::ADIDigitalOut SideHang('H', true);
+  pros::Motor intake(17);
+  pros::Motor intake1(19);
+  pros::Motor hang(8);
+  pros::ADIDigitalOut wing1('H', false);
+  pros::ADIDigitalOut wing2('G', false);
+  pros::ADIDigitalOut Vwing('C', false);
+  pros::ADIDigitalOut Rachet('D', false);
+  pros::ADIDigitalOut Hang1('A', false);
+  pros::ADIDigitalOut Hang2('B', false);
   while (true) {
 
     chassis.tank(); // Tank control
@@ -401,65 +399,82 @@ void opcontrol() {
     // Put more user control code here!
     // . . .
     // intake code
-    if(master.get_digital(DIGITAL_L1)){
+    if(master.get_digital(DIGITAL_L2)){
         intake.move_voltage(12000);
+		intake1.move_voltage(12000);
     }  
-    else if(master.get_digital(DIGITAL_L2)){
+    else if(master.get_digital(DIGITAL_L1)){
         intake.move_voltage(-12000);
+		intake1.move_voltage(-12000);
     }
     else{
         intake.move_voltage(0);
+		intake1.move_voltage(0);
     }
     // catapult
     if(master.get_digital(DIGITAL_LEFT)){
-        catapult.move_voltage(12000);
+        hang.move_voltage(12000);
     }
     else if(master.get_digital(DIGITAL_RIGHT)){
-        catapult.move_voltage(-12000);
+        hang.move_voltage(-12000);
     }
     else{
-        catapult.move_voltage(0);
+        hang.move_voltage(0);
     }
     
     // wing code
 		if(master.get_digital_new_press(DIGITAL_DOWN)){
-      if(wings == false) {
-          wing1.set_value(true);
-          wing2.set_value(true);
-          wings = true;
-      
-      } else if(wings == true) {
+      if(wingleft == true) {
           wing1.set_value(false);
+		  wingleft = false;
+     } else if(wingleft == false) {
+          wing1.set_value(true);
+		  wingleft = true;
+      }
+    }
+	
+	if(master.get_digital_new_press(DIGITAL_B)){
+      if(wingright == false) {
+          wing2.set_value(true);
+		  wingright = true;
+      }	else if(wingright == true) {
           wing2.set_value(false);
-          wings = false;
+		  wingright = false;
       }
     }
 
-    if(master.get_digital_new_press(DIGITAL_UP)){
-      if(Vwings == false) {
-          Vwing1.set_value(true);
-          Vwing2.set_value(true);
-          Vwings = true;
-      
-      } else if(Vwings == true) {
-          Vwing1.set_value(false);
-          Vwing2.set_value(false);
-          Vwings = false;
+	if(master.get_digital_new_press(DIGITAL_UP)){
+      if(Vwing1 == false) {
+          Vwing.set_value(true);
+		  Vwing1 = true;
+      }	else if(Vwing1 == true) {
+          Vwing.set_value(false);
+		  Vwing1 = false;
       }
     }
-    // blocker code
-		if(master.get_digital_new_press(DIGITAL_B)) {
-      if(Hang == false){
+
+	if(master.get_digital_new_press(DIGITAL_A)){
+      if(Rachet1 == true) {
+          Rachet.set_value(false);
+		  Rachet1 = false;
+	  } else if(Rachet1 == false) {
+    	  Rachet.set_value(true);
+		  Rachet1 = true;
+	  }
+	}
+
+	if(master.get_digital_new_press(DIGITAL_X)) {
+      if(Phang == false){
           Hang1.set_value(true);
           Hang2.set_value(true);
-          Hang = true;
+          Phang = true;
       }
-      else if(Hang == true){
+      else if(Phang == true){
         Hang1.set_value(false);
         Hang2.set_value(false);
-        Hang = false;
-            }
+        Phang = false;
         }
+    }
     pros::delay(ez::util::DELAY_TIME); // This is used for timer calculations!  Keep this ez::util::DELAY_TIME
   }
 }
