@@ -1,15 +1,11 @@
 #include "main.h"
 
 extern pros::Motor intake;
-extern pros::Motor catapult;
+extern pros::Motor wallstake;
+extern pros::Motor wallstake1;
+extern pros::Rotation rotation_sensor;
 
-extern pros::ADIDigitalOut wing1;
-extern pros::ADIDigitalOut wing2;
-extern pros::ADIDigitalOut Hang1;
-extern pros::ADIDigitalOut Hang2;
-extern pros::ADIDigitalOut Vwing1;
-extern pros::ADIDigitalOut Vwing2;
-extern pros::ADIDigitalOut SideHang;
+extern pros::ADIDigitalOut mogo;
 extern pros::Motor lF;
 extern pros::Motor lB;
 extern pros::Motor lB2;

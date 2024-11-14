@@ -1,6 +1,4 @@
 #include "main.h"
-
-
 /////
 // For instalattion, upgrading, documentations and tutorials, check out website!
 // https://ez-robotics.github.io/EZ-Template/
@@ -127,268 +125,51 @@ void drive_and_turn() {
   chassis.wait_drive();
 }
 
-	void RedDescore(){
-    Vwing1.set_value(true);
-    pros::delay(1000);
-    Vwing1.set_value(false);
-    chassis.set_drive_pid(-30, DRIVE_SPEED, true);
-    chassis.wait_drive();
-    chassis.set_turn_pid(176, TURN_SPEED);
-    chassis.wait_drive();
-    Vwing2.set_value(true);
-    pros::delay(10);
-    chassis.set_drive_pid(-32, DRIVE_SPEED, true);
-    chassis.wait_drive();
-    Vwing2.set_value(false);
-    pros::delay(10);
-    chassis.set_turn_pid(-45, TURN_SPEED);
-    chassis.wait_drive();
-    chassis.set_drive_pid(33, DRIVE_SPEED, true);
-    chassis.wait_drive();
-    chassis.set_turn_pid(-50, TURN_SPEED);
-    chassis.wait_drive();
-    intake.move_voltage(-12000);
-  }
 
-  void BlueDescore() {
-    Vwing1.set_value(true);
-    pros::delay(1000);
-    Vwing1.set_value(false);
-    chassis.set_drive_pid(-30, DRIVE_SPEED, true);
-    chassis.wait_drive();
-    chassis.set_turn_pid(176, TURN_SPEED);
-    chassis.wait_drive();
-    Vwing2.set_value(true);
-    pros::delay(10);
-    chassis.set_drive_pid(-32, DRIVE_SPEED, true);
-    chassis.wait_drive();
-    Vwing2.set_value(false);
-    pros::delay(10);
-    chassis.set_turn_pid(-45, TURN_SPEED);
-    chassis.wait_drive();
-    chassis.set_drive_pid(33, DRIVE_SPEED, true);
-    chassis.wait_drive();
-    chassis.set_turn_pid(-50, TURN_SPEED);
-    chassis.wait_drive();
-    intake.move_voltage(-12000);
+  void solowp(){
+  chassis.set_drive_pid(-16, DRIVE_SPEED, true);
+  chassis.wait_drive();
+  chassis.set_turn_pid(90, TURN_SPEED);
+  chassis.wait_drive();
+  chassis.set_drive_pid(-3, DRIVE_SPEED, true);
+  chassis.wait_drive();
+  intake.move_voltage(-12000);
+  pros::delay(600);
+  intake.move_voltage(0);
+  intake.move_voltage(12000);
+  chassis.set_drive_pid(11, DRIVE_SPEED, true);
+  chassis.wait_drive();
+  mogo.set_value(true);
+  chassis.set_turn_pid(-135, TURN_SPEED);
+  chassis.wait_drive();
+  intake.move_voltage(0);
+  chassis.set_drive_pid(-22, DRIVE_SPEED, true);
+  chassis.wait_drive();
+  mogo.set_value(false);
+  pros::delay(700);
+  chassis.set_drive_pid(-9, DRIVE_SPEED, true);
+  chassis.wait_drive();
+  chassis.set_turn_pid(0, TURN_SPEED);
+  chassis.wait_drive();
+  intake.move_voltage(-12000);
+  chassis.set_drive_pid(12, DRIVE_SPEED, true);
+  chassis.wait_drive();
+  pros::delay(700);
+  chassis.set_drive_pid(-5, DRIVE_SPEED, true);
+  chassis.wait_drive();
+  intake.move_voltage(0);
+  chassis.set_turn_pid(135, TURN_SPEED);
+  chassis.wait_drive();
+  chassis.set_drive_pid(13, DRIVE_SPEED, true);
+  chassis.wait_drive();
   }
-  
-	void RedGoalSide(){
-    Vwing1.set_value(true);
-    pros::delay(1000);
-    Vwing1.set_value(false);
-    pros::delay(10);
-    Vwing2.set_value(true);
-    chassis.set_drive_pid(-20, DRIVE_SPEED, true);
-    chassis.wait_drive();
-    chassis.set_turn_pid(-40, TURN_SPEED);
-    chassis.wait_drive();
-    chassis.set_drive_pid(-13, DRIVE_SPEED, true);
-    chassis.wait_drive();
-    Vwing2.set_value(false);
-    pros::delay(10);
-    chassis.set_drive_pid(9, DRIVE_SPEED, true);
-    chassis.wait_drive();
-    chassis.set_turn_pid(75, TURN_SPEED);
-    chassis.wait_drive();
-    chassis.set_drive_pid(50, DRIVE_SPEED, true);
-    chassis.wait_drive();
-    intake.move_voltage(12000);
-    pros::delay(300);
-    chassis.set_turn_pid(190, TURN_SPEED);
-    chassis.wait_drive();
-    intake.move_voltage(-12000);
-    pros::delay(600);
-    intake.move_voltage(0);
-    chassis.set_drive_pid(6, DRIVE_SPEED, true);
-    chassis.wait_drive();
-    chassis.set_turn_pid(107, TURN_SPEED);
-    chassis.wait_drive();
-    chassis.set_drive_pid(14, DRIVE_SPEED, true);
-    chassis.wait_drive();
-    intake.move_voltage(12000);
-    pros::delay(300);
-    chassis.set_turn_pid(236, TURN_SPEED);
-    chassis.wait_drive();
-    intake.move_voltage(-12000);
-    pros::delay(300);
-    wing2.set_value(true);
-    pros::delay(1);
-    wing1.set_value(true);
-    pros::delay(1);
-    chassis.set_drive_pid(34, DRIVE_SPEED, true);
-    chassis.wait_drive();
-    chassis.set_drive_pid(-10, DRIVE_SPEED, true);
-    chassis.wait_drive();
-    chassis.set_drive_pid(-15, DRIVE_SPEED, true);
-    chassis.wait_drive();
-    chassis.set_drive_pid(23, DRIVE_SPEED, true);
-    chassis.wait_drive();
-    chassis.set_drive_pid(-10, DRIVE_SPEED, true);
-    chassis.wait_drive();
-  }
-    
-	void BlueGoalSide(){
-    Vwing1.set_value(true);
-    pros::delay(1000);
-    Vwing1.set_value(false);
-    pros::delay(10);
-    Vwing2.set_value(true);
-    chassis.set_drive_pid(-20, DRIVE_SPEED, true);
-    chassis.wait_drive();
-    chassis.set_turn_pid(-40, TURN_SPEED);
-    chassis.wait_drive();
-    chassis.set_drive_pid(-15, DRIVE_SPEED, true);
-    chassis.wait_drive();
-    Vwing2.set_value(false);
-    pros::delay(10);
-    chassis.set_drive_pid(9, DRIVE_SPEED, true);
-    chassis.wait_drive();
-    chassis.set_turn_pid(75, TURN_SPEED);
-    chassis.wait_drive();
-    chassis.set_drive_pid(50, DRIVE_SPEED, true);
-    chassis.wait_drive();
-    intake.move_voltage(12000);
-    pros::delay(300);
-    chassis.set_turn_pid(190, TURN_SPEED);
-    chassis.wait_drive();
-    intake.move_voltage(-12000);
-    pros::delay(600);
-    intake.move_voltage(0);
-    chassis.set_drive_pid(6, DRIVE_SPEED, true);
-    chassis.wait_drive();
-    chassis.set_turn_pid(107, TURN_SPEED);
-    chassis.wait_drive();
-    chassis.set_drive_pid(12, DRIVE_SPEED, true);
-    chassis.wait_drive();
-    intake.move_voltage(12000);
-    pros::delay(300);
-    chassis.set_turn_pid(236, TURN_SPEED);
-    chassis.wait_drive();
-    intake.move_voltage(-12000);
-    pros::delay(300);
-    wing2.set_value(true);
-    pros::delay(1);
-    wing1.set_value(true);
-    pros::delay(1);
-    chassis.set_drive_pid(34, DRIVE_SPEED, true);
-    chassis.wait_drive();
-    chassis.set_drive_pid(-10, DRIVE_SPEED, true);
-    chassis.wait_drive();
-    chassis.set_drive_pid(-15, DRIVE_SPEED, true);
-    chassis.wait_drive();
-    chassis.set_drive_pid(23, DRIVE_SPEED, true);
-    chassis.wait_drive();
-  }
-	void RedElims(){
-    Vwing1.set_value(true);
-    pros::delay(1000);
-    Vwing1.set_value(false);
-    pros::delay(10);
-    chassis.set_drive_pid(51, DRIVE_SPEED, true);
-    chassis.wait_drive();
-    chassis.set_turn_pid(-90, TURN_SPEED);
-    chassis.wait_drive();
-    intake.move_voltage(-12000);
-    pros::delay(300);
-    chassis.set_drive_pid(5, DRIVE_SPEED, true);
-    chassis.wait_drive();
-    chassis.set_drive_pid(-4, DRIVE_SPEED, true);
-    chassis.wait_drive();
-    chassis.set_turn_pid(90, TURN_SPEED);
-    chassis.wait_drive();
-    Vwing2.set_value(true);
-    chassis.set_drive_pid(-7, DRIVE_SPEED, true);
-    chassis.wait_drive();
-    wing1.set_value(true);
-    wing2.set_value(true);
-    Vwing2.set_value(false);
-    pros::delay(800);
-    chassis.set_drive_pid(34, DRIVE_SPEED, true);
-    chassis.wait_drive();
-    chassis.set_drive_pid(-29, DRIVE_SPEED, true);
-    chassis.wait_drive();
-    wing1.set_value(false);
-    wing2.set_value(false);
-    chassis.set_turn_pid(180, TURN_SPEED);
-    chassis.wait_drive();
-    chassis.set_drive_pid(48, DRIVE_SPEED, true);
-    chassis.wait_drive();
-    chassis.set_turn_pid(90, TURN_SPEED);
-    chassis.wait_drive();
-    chassis.set_drive_pid(28, DRIVE_SPEED, true);
-    chassis.wait_drive();
-  }
-  void BlueElims(){
+  void safewp(){
 
+  }
+  void Elims(){
   }
 	void Skills(){    
-    Vwing1.set_value(true);
-    pros::delay(1000);
-    Vwing1.set_value(false); 
-    chassis.set_drive_pid(-30, DRIVE_SPEED, true);
-    chassis.wait_drive();
-    chassis.set_drive_pid(5, DRIVE_SPEED, true);
-    chassis.wait_drive();
-    chassis.set_drive_pid(-7, DRIVE_SPEED, true);
-    chassis.wait_drive();
-    chassis.set_turn_pid(25, TURN_SPEED);
-    chassis.wait_drive();
-    chassis.set_drive_pid(12, DRIVE_SPEED, true);
-    chassis.wait_drive();
-    chassis.set_turn_pid(-70, TURN_SPEED);
-    chassis.wait_drive();
-    Vwing1.set_value(true);
-    pros::delay(1);
-    catapult.move_voltage(-12000);
-    pros::delay(30000);
-    catapult.move_voltage(0);
-    pros::delay(10);
-    Vwing1.set_value(false);
-    pros::delay(10);
-    chassis.set_turn_pid(160, TURN_SPEED);
-    chassis.wait_drive();
-    chassis.set_drive_pid(-30, DRIVE_SPEED, true);
-    chassis.wait_drive();
-    chassis.set_turn_pid(317, TURN_SPEED);
-    chassis.wait_drive();
-    chassis.set_drive_pid(70, DRIVE_SPEED, true);
-    chassis.wait_drive();
-    chassis.set_turn_pid(45, TURN_SPEED);
-    chassis.wait_drive();
-    chassis.set_drive_pid(-21, DRIVE_SPEED, true);
-    chassis.wait_drive();
-    chassis.set_turn_pid(175, TURN_SPEED);
-    chassis.wait_drive();
-    chassis.set_drive_pid(35, DRIVE_SPEED, true);
-    chassis.wait_drive();
-    chassis.set_turn_pid(120, TURN_SPEED);
-    chassis.wait_drive();
-    Vwing1.set_value(true);
-    Vwing2.set_value(true);
-    pros::delay(10);
-    chassis.set_drive_pid(-31, DRIVE_SPEED, true);
-    chassis.wait_drive();
-    chassis.set_drive_pid(20, DRIVE_SPEED, true);
-    chassis.wait_drive();
-    Vwing1.set_value(false);
-    Vwing2.set_value(false);
-    pros::delay(10);
-    chassis.set_turn_pid(45, TURN_SPEED);
-    chassis.wait_drive();
-    chassis.set_drive_pid(-20, DRIVE_SPEED, true);
-    chassis.wait_drive();
-    chassis.set_turn_pid(125, TURN_SPEED);
-    chassis.wait_drive();
-    Vwing1.set_value(true);
-    Vwing2.set_value(true);
-    pros::delay(10);
-    chassis.set_drive_pid(-31, DRIVE_SPEED, true);
-    chassis.wait_drive();
-    chassis.set_drive_pid(30, DRIVE_SPEED, true);
-    chassis.wait_drive();
-    Vwing1.set_value(false);
-    Vwing2.set_value(false);
+    
   }
 	void test(){
     

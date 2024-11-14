@@ -4,7 +4,6 @@
 #include "EZ-Template/drive/drive.hpp"
 
 extern Drive chassis;
-
 void drive_example();
 void turn_example();
 void drive_and_turn();
@@ -19,11 +18,8 @@ void two_mogo_constants();
 void exit_condition_defaults();
 void modified_exit_condition();
 
-void RedGoalSide();
-void RedDescore();
-void BlueGoalSide();
-void BlueDescore();
-void RedElims();
-void BlueElims();
+void solowp();
+void safewp();
+void Elims();
 void Skills();
 void test();

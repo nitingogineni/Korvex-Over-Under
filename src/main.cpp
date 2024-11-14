@@ -12,18 +12,18 @@ using namespace std;
 Drive chassis (
   // Left Chassis Ports (negati	cve port will reverse it!)
   //   the first port is the sensored port (when trackers are not used!)
-  {-6, -11, 7}
+  {-18, 17, -14}
 
   // Right Chassis Ports (negative port will reverse it!)
   //   the first port is the sensored port (when trackers are not used!)
-  ,{-4, 20, 12}	
+  ,{20, -19, 11}	
 
   // IMU Port
-  ,15
+  ,5
 
   // Wheel Diameter (Remember, 4" wheels are actually 4.125!)
   //    (or tracking wheel diameter)
-  ,3.25
+  ,2.75
 
   // Cartridge RPM
   //   (or tick per rotation if using tracking wheels)
@@ -53,12 +53,9 @@ Drive chassis (
 
 enum class autonStates { // the possible auton selections
 	off,
-	RedDescore,
-	RedGoalSide,
-	BlueDescore,
-	BlueGoalSide,
-	RedElims,
-	BlueElims,
+	solowp,
+	safewp,
+	Elims,
 	Skills,
 	test
 };
@@ -66,38 +63,15 @@ enum class autonStates { // the possible auton selections
 
 autonStates autonSelection = autonStates::off;
 
-static lv_res_t RedLeftBtnAction(lv_obj_t *btn) {
-	autonSelection = autonStates::RedDescore;
-	std::cout << pros::millis() << "RedLeft" << std::endl;
-	return LV_RES_OK;
-}
-
-static lv_res_t RedRightBtnAction(lv_obj_t *btn) {
-	autonSelection = autonStates::RedGoalSide;
-	std::cout << pros::millis() << "RedRight" << std::endl;
-	return LV_RES_OK;
-}
-
-static lv_res_t BlueLeftBtnAction(lv_obj_t *btn) {
-	autonSelection = autonStates::BlueDescore;
-	std::cout << pros::millis() << "BlueLeft" << std::endl;
-	return LV_RES_OK;
-}
-
 static lv_res_t BlueRightBtnAction(lv_obj_t *btn) {
-	autonSelection = autonStates::BlueGoalSide;
+	autonSelection = autonStates::solowp;
 	std::cout << pros::millis() << "BlueRight" << std::endl;
 	return LV_RES_OK;
 }
 
-static lv_res_t RedSoloWPBtnAction(lv_obj_t *btn) {
-	autonSelection = autonStates::RedElims;
-	std::cout << pros::millis() << "RedSoloWP" << std::endl;
-	return LV_RES_OK;
-}
 
 static lv_res_t BlueSoloWPBtnAction(lv_obj_t *btn) {
-	autonSelection = autonStates::BlueElims;
+	autonSelection = autonStates::Elims;
 	std::cout << pros::millis() << "BlueSoloWP" << std::endl;
 	return LV_RES_OK;
 }
@@ -138,12 +112,11 @@ static lv_res_t noAutonBtnAction(lv_obj_t *btn) {
  * to keep execution time for this mode under a few seconds.
  */
 void initialize() {
+	
   // Print our branding over your terminal :D
   
-  pros::delay(500); // Stop the user from doing anything while legacy ports configure.
-
-  imu.reset();
-	
+	pros::delay(500); // Stop the user from doing anything while legacy ports configure.
+  	imu.reset();	
 	lv_theme_t *th = lv_theme_alien_init(360, NULL); //Set a HUE value and keep font default RED
 	lv_theme_set_current(th);
 
@@ -168,26 +141,7 @@ void initialize() {
 	lv_obj_t *RedSoloWPBtn = lv_btn_create(RedTab, NULL);
 	lv_obj_t *labelRedSolo = lv_label_create(RedSoloWPBtn, NULL);
 
-	lv_label_set_text(labelRedLeft, "RedDescore");
-	lv_btn_set_action(RedLeftBtn, LV_BTN_ACTION_CLICK, RedLeftBtnAction);
-	lv_obj_set_size(RedLeftBtn, 150, 50);
-	lv_btnm_set_toggle(RedLeftBtn, true, 1);
-	lv_obj_set_pos(RedLeftBtn, 0, 0);
-	lv_obj_align(RedLeftBtn, NULL, LV_ALIGN_CENTER, -150, -5);
 
-	lv_label_set_text(labelRedRight, "RedGoalSide");
-	lv_btn_set_action(RedRightBtn, LV_BTN_ACTION_CLICK, RedRightBtnAction);
-	lv_obj_set_size(RedRightBtn, 150, 50);
-	lv_btnm_set_toggle(RedRightBtn, true, 1);
-	lv_obj_set_pos(RedRightBtn, 0, 0);
-	lv_obj_align(RedRightBtn, NULL, LV_ALIGN_CENTER, 0, 0);
-
-	lv_label_set_text(labelRedSolo, "RedElims");
-	lv_btn_set_action(RedSoloWPBtn, LV_BTN_ACTION_CLICK, RedSoloWPBtnAction);
-	lv_obj_set_size(RedSoloWPBtn, 150, 50);
-	lv_btnm_set_toggle(RedSoloWPBtn, true, 1);
-	lv_obj_set_pos(RedSoloWPBtn, 0, 0);
-	lv_obj_align(RedSoloWPBtn, NULL, LV_ALIGN_CENTER, 150, 12.5);
 	
 
 	// Blue tab
@@ -200,21 +154,21 @@ void initialize() {
 	lv_obj_t *BlueSoloWPBtn = lv_btn_create(BlueTab, NULL);
 	lv_obj_t *labelBlueSolo = lv_label_create(BlueSoloWPBtn, NULL);
 
-	lv_label_set_text(labelBlueLeft, "BlueDescore");
-	lv_btn_set_action(BlueLeftBtn, LV_BTN_ACTION_CLICK, BlueLeftBtnAction);
+	lv_label_set_text(labelBlueLeft, "safewp");
+	lv_btn_set_action(BlueLeftBtn, LV_BTN_ACTION_CLICK, BlueRightBtnAction);
 	lv_obj_set_size(BlueLeftBtn, 150, 50);
 	lv_btnm_set_toggle(BlueLeftBtn, true, 1);
 	lv_obj_set_pos(BlueLeftBtn, 0, 0);
 	lv_obj_align(BlueLeftBtn, NULL, LV_ALIGN_CENTER, -150, -5);
 
-	lv_label_set_text(labelBlueRight, "BlueGoalSide");
+	lv_label_set_text(labelBlueRight, "solowp");
 	lv_btn_set_action(BlueRightBtn, LV_BTN_ACTION_CLICK, BlueRightBtnAction);
 	lv_obj_set_size(BlueRightBtn, 150, 50);
 	lv_btnm_set_toggle(BlueRightBtn, true, 1);
 	lv_obj_set_pos(BlueRightBtn, 0, 0);
 	lv_obj_align(BlueRightBtn, NULL, LV_ALIGN_CENTER, 0, 0);
 
-	lv_label_set_text(labelBlueSolo, "BlueElims");
+	lv_label_set_text(labelBlueSolo, "Elims");
 	lv_btn_set_action(BlueSoloWPBtn, LV_BTN_ACTION_CLICK, BlueSoloWPBtnAction);
 	lv_obj_set_size(BlueSoloWPBtn, 150, 50);
 	lv_btnm_set_toggle(BlueSoloWPBtn, true, 1);
@@ -283,13 +237,9 @@ void initialize() {
  * the VEX Competition Switch, following either autonomous or opcontrol. When
  * the robot is enabled, this task will exit.
  */
+
 void disabled() {
-Hang1.set_value(false);
-Hang2.set_value(false);
 }
-
-
-
 /**
  * Runs after initialize(), and before autonomous when connected to the Field
  * Management System or the VEX Competition Switch. This is intended for
@@ -329,23 +279,15 @@ void autonomous() {
 	}	
 
 	switch(autonSelection) {
-		case autonStates::RedDescore:
-			RedDescore();
+		case autonStates::safewp:
+			safewp();
 			break;
-		case autonStates::RedGoalSide:
-			RedGoalSide();
+		case autonStates::solowp:
+			solowp();
 			break;
-		case autonStates::BlueDescore:
-			BlueDescore();
-			break;
-		case autonStates::BlueGoalSide:
-			BlueGoalSide();
-			break;
-		case autonStates::RedElims:
-			RedElims();
-			break;
-		case autonStates::BlueElims:
-			BlueElims();
+
+		case autonStates::Elims:
+			Elims();
 			break;
 		case autonStates::Skills:
 			Skills();
@@ -373,24 +315,17 @@ void autonomous() {
  * operator control task will be stopped. Re-enabling the robot will restart the
  * task, not resume it from where it left off.
  */
-
-bool wings = false;
-bool Hang = false;
-bool Vwings = false;
+bool clamp1 = false;
 void opcontrol() {
   // This is preference to what you like to drive on.
   chassis.set_drive_brake(MOTOR_BRAKE_COAST);
-  pros::Motor intake(14);
-  pros::Motor catapult(13);
-  pros::ADIDigitalOut wing1('C', false);
-  pros::ADIDigitalOut wing2('F', false);
-  pros::ADIDigitalOut Hang1('G', false);
-  pros::ADIDigitalOut Hang2('A', false);
-  pros::ADIDigitalOut Vwing1('E', false);
-  pros::ADIDigitalOut Vwing2('B', false);
-  pros::ADIDigitalOut SideHang('H', true);
+  pros::Motor intake(12);
+  pros::Motor wallstake(10);
+  pros::Motor wallstake1(9);
+  pros::Rotation rotation_sensor(8);
+  pros::ADIDigitalOut mogo('H', false);
   while (true) {
-
+	manualLiftControl();
     chassis.tank(); // Tank control
     // chassis.arcade_standard(ez::SPLIT); // Standard split arcade
     // chassis.arcade_standard(ez::SINGLE); // Standard single arcade
@@ -401,65 +336,59 @@ void opcontrol() {
     // Put more user control code here!
     // . . .
     // intake code
-    if(master.get_digital(DIGITAL_L1)){
+    if(master.get_digital(DIGITAL_L2)){
         intake.move_voltage(12000);
     }  
-    else if(master.get_digital(DIGITAL_L2)){
+    else if(master.get_digital(DIGITAL_L1)){
         intake.move_voltage(-12000);
     }
     else{
         intake.move_voltage(0);
     }
-    // catapult
-    if(master.get_digital(DIGITAL_LEFT)){
-        catapult.move_voltage(12000);
-    }
-    else if(master.get_digital(DIGITAL_RIGHT)){
-        catapult.move_voltage(-12000);
-    }
-    else{
-        catapult.move_voltage(0);
-    }
     
-    // wing code
-		if(master.get_digital_new_press(DIGITAL_DOWN)){
-      if(wings == false) {
-          wing1.set_value(true);
-          wing2.set_value(true);
-          wings = true;
-      
-      } else if(wings == true) {
-          wing1.set_value(false);
-          wing2.set_value(false);
-          wings = false;
+
+	if(master.get_digital_new_press(DIGITAL_UP)){
+      if(clamp1 == false) {
+          mogo.set_value(true);
+		  clamp1 = true;
+      }	
+	  else if(clamp1 == true) {
+          mogo.set_value(false);
+		  clamp1 = false;
       }
+	  
     }
 
-    if(master.get_digital_new_press(DIGITAL_UP)){
-      if(Vwings == false) {
-          Vwing1.set_value(true);
-          Vwing2.set_value(true);
-          Vwings = true;
-      
-      } else if(Vwings == true) {
-          Vwing1.set_value(false);
-          Vwing2.set_value(false);
-          Vwings = false;
-      }
-    }
-    // blocker code
-		if(master.get_digital_new_press(DIGITAL_B)) {
-      if(Hang == false){
-          Hang1.set_value(true);
-          Hang2.set_value(true);
-          Hang = true;
-      }
-      else if(Hang == true){
-        Hang1.set_value(false);
-        Hang2.set_value(false);
-        Hang = false;
-            }
-        }
     pros::delay(ez::util::DELAY_TIME); // This is used for timer calculations!  Keep this ez::util::DELAY_TIME
   }
 }
+
+	// Constants for lift positions
+	const double FIRST_RING_LIFT_VALUE = -0.095*360*100;
+	const double MAX_LIFT_VALUE = -0.43 * 360 * 100;
+
+	void manualLiftControl() {
+	double currentLiftPosition = rotation_sensor.get_position();   // Get current lift position
+		if (master.get_digital(pros::E_CONTROLLER_DIGITAL_A)) {
+			// Move the lift down, allowing mvoement as long as it's above 0 degrees
+			if (currentLiftPosition > MAX_LIFT_VALUE) {
+				wallstake.move_velocity(100); // Move lift down
+				wallstake1.move_velocity(100);
+			} else {
+				// Stop the lift if it tries to go below 0 degrees
+				wallstake.move_velocity(0);
+				wallstake1.move_velocity(0);
+			}
+		} else if (master.get_digital(pros::E_CONTROLLER_DIGITAL_X)) {
+			wallstake.move_velocity(-200); // Move lift up
+			wallstake1.move_velocity(-200);
+		} else {
+			wallstake.move_velocity(0);
+			wallstake1.move_velocity(0);
+
+		}
+	}
+	void setLift(int val) { .
+		wallstake.move(val);
+		wallstake1.move(val);
+	}
