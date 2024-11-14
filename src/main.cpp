@@ -113,8 +113,11 @@ static lv_res_t noAutonBtnAction(lv_obj_t *btn) {
  */
 void initialize() {
 	
+	
   // Print our branding over your terminal :D
   
+	pros::delay(500); // Stop the user from doing anything while legacy ports configure.
+  	imu.reset();	
 	pros::delay(500); // Stop the user from doing anything while legacy ports configure.
   	imu.reset();	
 	lv_theme_t *th = lv_theme_alien_init(360, NULL); //Set a HUE value and keep font default RED
@@ -238,6 +241,7 @@ void initialize() {
  * the robot is enabled, this task will exit.
  */
 
+
 void disabled() {
 }
 /**
@@ -337,13 +341,17 @@ void opcontrol() {
     // . . .
     // intake code
     if(master.get_digital(DIGITAL_L2)){
+    if(master.get_digital(DIGITAL_L2)){
         intake.move_voltage(12000);
+		intake1.move_voltage(12000);
     }  
     else if(master.get_digital(DIGITAL_L1)){
         intake.move_voltage(-12000);
+		intake1.move_voltage(-12000);
     }
     else{
         intake.move_voltage(0);
+		intake1.move_voltage(0);
     }
     
 
