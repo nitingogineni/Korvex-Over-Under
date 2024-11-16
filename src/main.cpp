@@ -33,7 +33,7 @@ Drive chassis (
   //    (or gear ratio of tracking wheel)
   // eg. if your drive is 84:36 where the 36t is powered, your RATIO would be 2.333.
   // eg. if your drive is 36:60 where the 60t is powered, your RATIO would be 0.6.
-  ,1.666
+  ,1.333
 
   // Uncomment if using tracking wheels
   /*
@@ -320,16 +320,22 @@ void autonomous() {
  * task, not resume it from where it left off.
  */
 bool clamp1 = false;
+bool clamp2 = false;
+
 void opcontrol() {
   // This is preference to what you like to drive on.
   chassis.set_drive_brake(MOTOR_BRAKE_COAST);
+  wallstake1.set_brake_mode(MOTOR_BRAKE_BRAKE);
+  wallstake.set_brake_mode(MOTOR_BRAKE_BRAKE);
   pros::Motor intake(12);
   pros::Motor wallstake(10);
   pros::Motor wallstake1(9);
   pros::Rotation rotation_sensor(8);
   pros::ADIDigitalOut mogo('H', false);
+  pros::ADIDigitalOut doinker('C', false);
   while (true) {
-	manualLiftControl();
+	liftControl();
+
     chassis.tank(); // Tank control
     // chassis.arcade_standard(ez::SPLIT); // Standard split arcade
     // chassis.arcade_standard(ez::SINGLE); // Standard single arcade
@@ -341,62 +347,110 @@ void opcontrol() {
     // . . .
     // intake code
     if(master.get_digital(DIGITAL_L2)){
-    if(master.get_digital(DIGITAL_L2)){
         intake.move_voltage(12000);
-		intake1.move_voltage(12000);
     }  
     else if(master.get_digital(DIGITAL_L1)){
         intake.move_voltage(-12000);
-		intake1.move_voltage(-12000);
     }
     else{
         intake.move_voltage(0);
-		intake1.move_voltage(0);
     }
     
 
-	if(master.get_digital_new_press(DIGITAL_UP)){
+	if(master.get_digital_new_press(DIGITAL_X)){
       if(clamp1 == false) {
-          mogo.set_value(true);
+          doinker.set_value(true);
 		  clamp1 = true;
       }	
 	  else if(clamp1 == true) {
-          mogo.set_value(false);
+          doinker.set_value(false);
 		  clamp1 = false;
       }
-	  
-    }
+	}
+
+	if(master.get_digital_new_press(DIGITAL_UP)) {
+		if(clamp2 == false) {
+			mogo.set_value(true);
+			clamp2 = true;
+		} 
+		else if(clamp2 == true) {
+			mogo.set_value(false);
+			clamp2 = false;
+		}
+	}
+	
+
 
     pros::delay(ez::util::DELAY_TIME); // This is used for timer calculations!  Keep this ez::util::DELAY_TIME
   }
 }
 
+	// // Constants for lift positions
+
+	// const double FIRST_RING_LIFT_VALUE = -0.095*360*100;
+    // const double MAX_LIFT_VALUE = -0.43 * 360 * 100;
+
+    // void manualLiftControl() {
+    // double currentLiftPosition = rotation_sensor.get_position();   // Get current lift position
+    //     if (master.get_digital(pros::E_CONTROLLER_DIGITAL_A)) {
+    //         // Move the lift down, allowing mvoement as long as it's above 0 degrees
+    //         if (currentLiftPosition > MAX_LIFT_VALUE) {
+    //             wallstake.move_velocity(127); // Move lift down
+    //             wallstake1.move_velocity(-127);
+    //         } else {
+    //             // Stop the lift if it tries to go below 0 degrees
+    //             wallstake.move_velocity(0);
+    //             wallstake1.move_velocity(0);
+    //         }
+    //     } else if (master.get_digital(pros::E_CONTROLLER_DIGITAL_X)) {
+	// 		pros::ADIDigitalOut doinker('G', false);
+    //         	wallstake.move_velocity(-127); // Move lift up
+    //         	wallstake1.move_velocity(127);
+    //     } else {
+    //         wallstake.move_velocity(0);
+    //         wallstake1.move_velocity(0);
+
+    //     }
+    // }
+    // void setLift(int val) {
+    //     wallstake.move(val);
+    //     wallstake1.move(val);
+    // }
+
+
 	// Constants for lift positions
-	const double FIRST_RING_LIFT_VALUE = -0.095*360*100;
-	const double MAX_LIFT_VALUE = -0.43 * 360 * 100;
 
-	void manualLiftControl() {
-	double currentLiftPosition = rotation_sensor.get_position();   // Get current lift position
-		if (master.get_digital(pros::E_CONTROLLER_DIGITAL_A)) {
-			// Move the lift down, allowing mvoement as long as it's above 0 degrees
-			if (currentLiftPosition > MAX_LIFT_VALUE) {
-				wallstake.move_velocity(100); // Move lift down
-				wallstake1.move_velocity(100);
-			} else {
-				// Stop the lift if it tries to go below 0 degrees
-				wallstake.move_velocity(0);
-				wallstake1.move_velocity(0);
-			}
-		} else if (master.get_digital(pros::E_CONTROLLER_DIGITAL_X)) {
-			wallstake.move_velocity(-200); // Move lift up
-			wallstake1.move_velocity(-200);
-		} else {
-			wallstake.move_velocity(0);
-			wallstake1.move_velocity(0);
+const double FIRST_RING_LIFT_VALUE = -1.10 * 360*100; 
+const double MAX_LIFT_VALUE = -0.43 * 360 * 100;
 
-		}
-	}
-	void setLift(int val) { .
-		wallstake.move(val);
-		wallstake1.move(val);
-	}
+void manualLiftControl() {
+    double currentLiftPosition = rotation_sensor.get_position();  // Get current lift position
+    if (master.get_digital(pros::E_CONTROLLER_DIGITAL_DOWN)) {
+        // Move the lift down, allowing movement as long as it's above 0 degrees
+            wallstake.move_velocity(200);  // Move lift down
+            wallstake1.move_velocity(-200);
+    } else if (master.get_digital(pros::E_CONTROLLER_DIGITAL_B)) {
+            wallstake.move_velocity(-200);  // Move lift up
+            wallstake1.move_velocity(200);
+    } else {
+          wallstake.move_velocity(0);
+          wallstake1.move_velocity(0);
+    }
+}
+
+void setLift(int input) {
+  wallstake.move(input);
+  wallstake1.move(-input);
+}
+
+PID liftPID{0.45, 0, 5, 0, "Lift"};
+
+void liftControl() {
+  if (master.get_digital(pros::E_CONTROLLER_DIGITAL_R1)) { 
+    intake.move_velocity(600);
+    liftPID.set_target(FIRST_RING_LIFT_VALUE);
+    setLift(liftPID.compute(rotation_sensor.get_position()));
+  } else {
+    manualLiftControl();
+  }
+}

@@ -75,6 +75,7 @@ void competition_initialize(void);
 void opcontrol(void);
 void manualLiftControl(void);
 void setLift(int);
+void liftControl();
 #ifdef __cplusplus
 }
 #endif

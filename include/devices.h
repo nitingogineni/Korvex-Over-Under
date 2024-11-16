@@ -6,6 +6,7 @@ extern pros::Motor wallstake1;
 extern pros::Rotation rotation_sensor;
 
 extern pros::ADIDigitalOut mogo;
+extern pros::ADIDigitalOut doinker;
 extern pros::Motor lF;
 extern pros::Motor lB;
 extern pros::Motor lB2;
