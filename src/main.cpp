@@ -331,7 +331,7 @@ void opcontrol() {
   pros::Motor wallstake(10);
   pros::Motor wallstake1(9);
   pros::Rotation rotation_sensor(8);
-  pros::ADIDigitalOut mogo('H', false);
+  pros::ADIDigitalOut mogo('A', false);
   pros::ADIDigitalOut doinker('C', false);
   while (true) {
 	liftControl();

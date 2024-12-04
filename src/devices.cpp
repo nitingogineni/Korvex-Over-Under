@@ -4,7 +4,7 @@ pros::Motor wallstake(10,pros::E_MOTOR_GEARSET_36, false);
 pros::Motor wallstake1(9,pros::E_MOTOR_GEARSET_36, false);
 pros::Motor intake(12, pros::E_MOTOR_GEARSET_06, false);
 
-pros::ADIDigitalOut mogo('H', false);
+pros::ADIDigitalOut mogo('A', false);
 pros::ADIDigitalOut doinker('C', false);
 
 pros::Motor lF(-19, pros::E_MOTOR_GEARSET_06); // left front motor. port 9, reversed
