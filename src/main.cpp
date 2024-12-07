@@ -63,6 +63,12 @@ enum class autonStates { // the possible auton selections
 
 autonStates autonSelection = autonStates::off;
 
+static lv_res_t BlueLeftBtnAction(lv_obj_t *btn) {
+    autonSelection = autonStates::safewp;
+    std::cout << pros::millis() << "BlueRight" << std::endl;
+    return LV_RES_OK;
+}
+
 static lv_res_t BlueRightBtnAction(lv_obj_t *btn) {
 	autonSelection = autonStates::solowp;
 	std::cout << pros::millis() << "BlueRight" << std::endl;
@@ -158,11 +164,12 @@ void initialize() {
 	lv_obj_t *labelBlueSolo = lv_label_create(BlueSoloWPBtn, NULL);
 
 	lv_label_set_text(labelBlueLeft, "safewp");
-	lv_btn_set_action(BlueLeftBtn, LV_BTN_ACTION_CLICK, BlueRightBtnAction);
-	lv_obj_set_size(BlueLeftBtn, 150, 50);
-	lv_btnm_set_toggle(BlueLeftBtn, true, 1);
-	lv_obj_set_pos(BlueLeftBtn, 0, 0);
-	lv_obj_align(BlueLeftBtn, NULL, LV_ALIGN_CENTER, -150, -5);
+    lv_btn_set_action(BlueLeftBtn, LV_BTN_ACTION_CLICK, BlueLeftBtnAction);
+    lv_obj_set_size(BlueLeftBtn, 150, 50);
+    lv_btnm_set_toggle(BlueLeftBtn, true, 1);
+    lv_obj_set_pos(BlueLeftBtn, 0, 0);
+    lv_obj_align(BlueLeftBtn, NULL, LV_ALIGN_CENTER, -150, -5);
+
 
 	lv_label_set_text(labelBlueRight, "solowp");
 	lv_btn_set_action(BlueRightBtn, LV_BTN_ACTION_CLICK, BlueRightBtnAction);
