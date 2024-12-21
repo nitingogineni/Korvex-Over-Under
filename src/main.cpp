@@ -427,8 +427,9 @@ void opcontrol() {
 
 	// Constants for lift positions
 
-const double FIRST_RING_LIFT_VALUE = -1.10 * 360*100; 
-const double MAX_LIFT_VALUE = -0.43 * 360 * 100;
+//const double FIRST_RING_LIFT_VALUE = -1.10 * 360*100;
+const double FIRST_RING_LIFT_VALUE =  0.678* 360 * 100; 
+const double MAX_LIFT_VALUE = 0.9 * 360 * 100;
 
 void manualLiftControl() {
     double currentLiftPosition = rotation_sensor.get_position();  // Get current lift position
@@ -450,14 +451,14 @@ void setLift(int input) {
   wallstake1.move(-input);
 }
 
-PID liftPID{0.45, 0, 5, 0, "Lift"};
+//PID liftPID{0.45, 0, 5, 0, "Lift"};
+PID liftPID{2, 0.45, 20, 0, "Lift"};
+
 
 void liftControl() {
   if (master.get_digital(pros::E_CONTROLLER_DIGITAL_R1)) { 
-    intake.move_velocity(600);
     liftPID.set_target(FIRST_RING_LIFT_VALUE);
     setLift(liftPID.compute(rotation_sensor.get_position()));
-  } else {
-    manualLiftControl();
+  } else {    manualLiftControl();
   }
 }
