@@ -1,4 +1,6 @@
 #include "main.h"
+#include "pros/misc.h"
+#include "pros/rtos.hpp"
 using namespace std;
 
 
@@ -12,11 +14,11 @@ using namespace std;
 Drive chassis (
   // Left Chassis Ports (negati	cve port will reverse it!)
   //   the first port is the sensored port (when trackers are not used!)
-  {-18, 17, -14}
+  {-2, 17, -11}
 
   // Right Chassis Ports (negative port will reverse it!)
   //   the first port is the sensored port (when trackers are not used!)
-  ,{20, -19, 11}	
+  ,{20, -19, 14}	
 
   // IMU Port
   ,5
@@ -342,6 +344,14 @@ void opcontrol() {
   pros::ADIDigitalOut doinker('C', false);
   while (true) {
 	liftControl();
+  pros::Controller master(pros::E_CONTROLLER_MASTER);
+	while (true) {
+  if (master.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_R1)) {
+			void nextstate();
+  }
+		}
+	   pros::delay(20);
+  
 
     chassis.tank(); // Tank control
     // chassis.arcade_standard(ez::SPLIT); // Standard split arcade
@@ -427,38 +437,69 @@ void opcontrol() {
 
 	// Constants for lift positions
 
-//const double FIRST_RING_LIFT_VALUE = -1.10 * 360*100;
-const double FIRST_RING_LIFT_VALUE =  0.678* 360 * 100; 
-const double MAX_LIFT_VALUE = 0.9 * 360 * 100;
+//const double FIRST_RING_LIFT_VALUE =  0.678* 360 * 100; 
+//const double MAX_LIFT_VALUE = 0.9 * 360 * 100;
 
-void manualLiftControl() {
-    double currentLiftPosition = rotation_sensor.get_position();  // Get current lift position
-    if (master.get_digital(pros::E_CONTROLLER_DIGITAL_DOWN)) {
+//void manualLiftControl() {
+    //double currentLiftPosition = rotation_sensor.get_position();  // Get current lift position
+    //if (master.get_digital(pros::E_CONTROLLER_DIGITAL_DOWN)) {
         // Move the lift down, allowing movement as long as it's above 0 degrees
-            wallstake.move_velocity(200);  // Move lift down
-            wallstake1.move_velocity(-200);
-    } else if (master.get_digital(pros::E_CONTROLLER_DIGITAL_B)) {
-            wallstake.move_velocity(-200);  // Move lift up
-            wallstake1.move_velocity(200);
-    } else {
-          wallstake.move_velocity(0);
-          wallstake1.move_velocity(0);
+      //      wallstake.move_velocity(200);  // Move lift down
+            //wallstake1.move_velocity(-200);
+    //} else if (master.get_digital(pros::E_CONTROLLER_DIGITAL_B)) {
+            //wallstake.move_velocity(-200);  // Move lift up
+            //wallstake1.move_velocity(200);
+    //} else {
+         // wallstake.move_velocity(0);
+    //      wallstake1.move_velocity(0);
+    //}
+//}
+
+//void setLift(int input) {
+  //wallstake.move(input);
+  //wallstake1.move(-input);
+//}
+
+
+//PID liftPID{2, 0.45, 20, 0, "Lift"};
+
+
+//void liftControl() {
+  //if (master.get_digital(pros::E_CONTROLLER_DIGITAL_R1)) { 
+    //liftPID.set_target(FIRST_RING_LIFT_VALUE);
+    //setLift(liftPID.compute(rotation_sensor.get_position()));
+  //} else {    manualLiftControl();
+  //}
+//}
+
+const int numStates = 3;
+int states[numStates] = {0, 30, 200};
+int currState = 0;
+int target = 0;
+
+void nextState() {
+    currState += 1;
+    if (currState == numStates) {
+        currState = 0;
     }
+    target = states[currState];
 }
-
-void setLift(int input) {
-  wallstake.move(input);
-  wallstake1.move(-input);
-}
-
-//PID liftPID{0.45, 0, 5, 0, "Lift"};
-PID liftPID{2, 0.45, 20, 0, "Lift"};
-
 
 void liftControl() {
-  if (master.get_digital(pros::E_CONTROLLER_DIGITAL_R1)) { 
-    liftPID.set_target(FIRST_RING_LIFT_VALUE);
-    setLift(liftPID.compute(rotation_sensor.get_position()));
-  } else {    manualLiftControl();
-  }
+    double kp = 0.5;
+    double error = target - rotation_sensor.get_position();
+    double velocity = kp * error;
+    wallstake1.move(velocity);
+    wallstake.move(velocity);
 }
+
+void start() {
+    pros::Task liftControlTask([]{
+        while (true) {
+            liftControl();
+            pros::delay(10);
+        }
+    });
+}
+
+

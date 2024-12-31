@@ -128,11 +128,11 @@ void drive_and_turn() {
 
   void solowp(){
   mogo.set_value(false);
-  chassis.set_drive_pid(-19.50, DRIVE_SPEED, true);
+  chassis.set_drive_pid(-20, DRIVE_SPEED, true);
   chassis.wait_drive();
   chassis.set_turn_pid(90, TURN_SPEED);
   chassis.wait_drive();
-  chassis.set_drive_pid(-5, DRIVE_SPEED, true);
+  chassis.set_drive_pid(-4.75, DRIVE_SPEED, true);
   chassis.wait_drive();
   intake.move_voltage(-12000);
   pros::delay(600);
@@ -159,7 +159,7 @@ void drive_and_turn() {
   chassis.wait_drive();
   intake.move_voltage(-12000);
   pros::delay(300);
-  chassis.set_drive_pid(18.25, DRIVE_SPEED, true);
+  chassis.set_drive_pid(16.5, DRIVE_SPEED, true);
   chassis.wait_drive();
   pros::delay(950);
   chassis.set_drive_pid(-15, DRIVE_SPEED, true);
@@ -169,7 +169,7 @@ void drive_and_turn() {
   chassis.wait_drive();
   chassis.set_turn_pid(170, TURN_SPEED);
   chassis.wait_drive();
-  chassis.set_drive_pid(38, DRIVE_SPEED, true);
+  chassis.set_drive_pid(45, DRIVE_SPEED, true);
   chassis.wait_drive();
   pros::delay(500);
   }
@@ -177,11 +177,11 @@ void drive_and_turn() {
 
   void safewp(){
   mogo.set_value(false);
-  chassis.set_drive_pid(-21, DRIVE_SPEED, true);
+  chassis.set_drive_pid(-19.5, DRIVE_SPEED, true);
   chassis.wait_drive();
   chassis.set_turn_pid(-90, TURN_SPEED);
   chassis.wait_drive();
-  chassis.set_drive_pid(-4.50, DRIVE_SPEED, true);
+  chassis.set_drive_pid(-4.75, DRIVE_SPEED, true);
   chassis.wait_drive();
   intake.move_voltage(-12000);
   pros::delay(600);
@@ -206,7 +206,10 @@ void drive_and_turn() {
   pros::delay(200);
   chassis.set_turn_pid(-95, TURN_SPEED);
   chassis.wait_drive();
-  chassis.set_drive_pid(24, DRIVE_SPEED, true);
+  intake.move_voltage(12000);
+  pros::delay(100);
+  intake.move_voltage(-12000);
+  chassis.set_drive_pid(25, DRIVE_SPEED, true);
   chassis.wait_drive();
   pros::delay(700);
   chassis.set_drive_pid(-15, DRIVE_SPEED, true);
