@@ -1,8 +1,8 @@
 #include "main.h"
 
 extern pros::Motor intake;
+
 extern pros::Motor wallstake;
-extern pros::Motor wallstake1;
 extern pros::Rotation rotation_sensor;
 
 extern pros::ADIDigitalOut mogo;

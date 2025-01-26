@@ -1,7 +1,8 @@
 #include "main.h"
-#include "pros/misc.h"
-#include "pros/rtos.hpp"
+//#include "pros/misc.h"
+//#include "pros/rtos.hpp"
 using namespace std;
+
 
 
 /////
@@ -14,14 +15,14 @@ using namespace std;
 Drive chassis (
   // Left Chassis Ports (negati	cve port will reverse it!)
   //   the first port is the sensored port (when trackers are not used!)
-  {-2, 17, -11}
+  {12, -3, -14}
 
   // Right Chassis Ports (negative port will reverse it!)
   //   the first port is the sensored port (when trackers are not used!)
-  ,{20, -19, 14}	
+  ,{-20, 19, 9}	
 
   // IMU Port
-  ,5
+  ,17
 
   // Wheel Diameter (Remember, 4" wheels are actually 4.125!)
   //    (or tracking wheel diameter)
@@ -120,7 +121,14 @@ static lv_res_t noAutonBtnAction(lv_obj_t *btn) {
  * to keep execution time for this mode under a few seconds.
  */
 void initialize() {
-	
+	pros::Task liftControlTask([]{
+        while (true) {
+            liftControl();
+            pros::delay(10);
+        }
+    });
+
+
 	
   // Print our branding over your terminal :D
   
@@ -334,30 +342,26 @@ bool clamp2 = false;
 void opcontrol() {
   // This is preference to what you like to drive on.
   chassis.set_drive_brake(MOTOR_BRAKE_COAST);
-  wallstake1.set_brake_mode(MOTOR_BRAKE_BRAKE);
-  wallstake.set_brake_mode(MOTOR_BRAKE_BRAKE);
-  pros::Motor intake(12);
-  pros::Motor wallstake(10);
-  pros::Motor wallstake1(9);
-  pros::Rotation rotation_sensor(8);
-  pros::ADIDigitalOut mogo('A', false);
-  pros::ADIDigitalOut doinker('C', false);
-  while (true) {
-	liftControl();
+  wallstake.set_brake_mode(MOTOR_BRAKE_HOLD);
+  pros::Motor intake(2);
+  pros::Motor wallstake(16);
+  pros::Rotation rotation_sensor(11);
+  pros::IMU imu(17);
+  pros::ADIDigitalOut mogo('H', false);
+  pros::ADIDigitalOut doinker('G', false);
   pros::Controller master(pros::E_CONTROLLER_MASTER);
-	while (true) {
-  if (master.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_R1)) {
-			void nextstate();
+  while (true) {
+  if (master.get_digital_new_press(DIGITAL_R1)) {
+    nextState();
   }
-		}
-	   pros::delay(20);
-  
-
+   if (master.get_digital_new_press(DIGITAL_R2)){
+    tip();
+   }
     chassis.tank(); // Tank control
-    // chassis.arcade_standard(ez::SPLIT); // Standard split arcade
-    // chassis.arcade_standard(ez::SINGLE); // Standard single arcade
-    // chassis.arcade_flipped(ez::SPLIT); // Flipped split arcade
-    // chassis.arcade_flipped(ez::SINGLE); // Flipped single arcade
+     //chassis.arcade_standard(ez::SPLIT); // Standard split arcade
+     //chassis.arcade_standard(ez::SINGLE); // Standard single arcade
+     //chassis.arcade_flipped(ez::SPLIT); // Flipped split arcade
+     //chassis.arcade_flipped(ez::SINGLE); // Flipped single arcade
 
     // . . .
     // Put more user control code here!
@@ -372,8 +376,8 @@ void opcontrol() {
     else{
         intake.move_voltage(0);
     }
-    
 
+     
 	if(master.get_digital_new_press(DIGITAL_X)){
       if(clamp1 == false) {
           doinker.set_value(true);
@@ -394,13 +398,16 @@ void opcontrol() {
 			mogo.set_value(false);
 			clamp2 = false;
 		}
-	}
-	
-
+  }
 
     pros::delay(ez::util::DELAY_TIME); // This is used for timer calculations!  Keep this ez::util::DELAY_TIME
-  }
+  
+
 }
+
+}
+
+//}
 
 	// // Constants for lift positions
 
@@ -437,27 +444,27 @@ void opcontrol() {
 
 	// Constants for lift positions
 
-//const double FIRST_RING_LIFT_VALUE =  0.678* 360 * 100; 
-//const double MAX_LIFT_VALUE = 0.9 * 360 * 100;
+//const double FIRST_RING_LIFT_VALUE =  -48.77* 360 * 100; 
+//.const double MAX_LIFT_VALUE =  -0.9* 360 * 100;
 
 //void manualLiftControl() {
-    //double currentLiftPosition = rotation_sensor.get_position();  // Get current lift position
-    //if (master.get_digital(pros::E_CONTROLLER_DIGITAL_DOWN)) {
-        // Move the lift down, allowing movement as long as it's above 0 degrees
-      //      wallstake.move_velocity(200);  // Move lift down
-            //wallstake1.move_velocity(-200);
-    //} else if (master.get_digital(pros::E_CONTROLLER_DIGITAL_B)) {
-            //wallstake.move_velocity(-200);  // Move lift up
-            //wallstake1.move_velocity(200);
-    //} else {
-         // wallstake.move_velocity(0);
-    //      wallstake1.move_velocity(0);
+  //  double currentLiftPosition = rotation_sensor.get_position();  // Get current lift position
+   // if (master.get_digital(pros::E_CONTROLLER_DIGITAL_DOWN)) {
+         //Move the lift down, allowing movement as long as it's above 0 degrees
+       //     wallstake.move_velocity(127);  // Move lift down
+          
+  
+   // } else if (master.get_digital(pros::E_CONTROLLER_DIGITAL_B)) {
+     //       wallstake.move_velocity(-127);  // Move lift up
+                  
+ //   }
+          //wallstake.move_voltage(0);
+        
     //}
 //}
 
 //void setLift(int input) {
   //wallstake.move(input);
-  //wallstake1.move(-input);
 //}
 
 
@@ -472,10 +479,14 @@ void opcontrol() {
   //}
 //}
 
+
+
 const int numStates = 3;
-int states[numStates] = {0, 30, 200};
+//make sure these are in centidegrees (1 degree = 100 centidegrees)
+int states[numStates] = {0, -2000, -14000};
 int currState = 0;
 int target = 0;
+
 
 void nextState() {
     currState += 1;
@@ -486,20 +497,18 @@ void nextState() {
 }
 
 void liftControl() {
-    double kp = 0.5;
+    double kp = 0.05;
     double error = target - rotation_sensor.get_position();
     double velocity = kp * error;
-    wallstake1.move(velocity);
     wallstake.move(velocity);
 }
 
-void start() {
-    pros::Task liftControlTask([]{
-        while (true) {
-            liftControl();
-            pros::delay(10);
-        }
-    });
+void tip(){
+  int tip_degree = {-20000};
+  rotation_sensor.get_position();
+  double kp = 0.05;
+
 }
+
 
 
