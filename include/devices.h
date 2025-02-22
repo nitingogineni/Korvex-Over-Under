@@ -1,9 +1,10 @@
 #include "main.h"
 
-extern pros::Motor intake;
+extern pros::Motor intake1;
 
 extern pros::Motor wallstake;
 extern pros::Rotation rotation_sensor;
+extern pros::Optical colorsort;
 
 extern pros::ADIDigitalOut mogo;
 extern pros::ADIDigitalOut doinker;

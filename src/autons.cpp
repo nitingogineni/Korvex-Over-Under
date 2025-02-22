@@ -13,7 +13,6 @@ const int TURN_SPEED  = 90;
 const int SWING_SPEED = 90;
 
 
-
 ///
 // Constants
 ///
@@ -134,30 +133,30 @@ void drive_and_turn() {
   chassis.wait_drive();
   chassis.set_drive_pid(-5, DRIVE_SPEED, true);
   chassis.wait_drive();
-  intake.move_voltage(-12000);
+  intake1.move_voltage(-12000);
   pros::delay(600);
-  intake.move_voltage(0);
+  intake1.move_voltage(0);
   //ALLIANCE STAKE
-   intake.move_voltage(12000);
+   intake1.move_voltage(12000);
   chassis.set_drive_pid(13, DRIVE_SPEED, true);
   chassis.wait_drive();
   mogo.set_value(true);
   chassis.set_turn_pid(-132, TURN_SPEED);
   chassis.wait_drive();
-  intake.move_voltage(0);
+  intake1.move_voltage(0);
   chassis.set_drive_pid(-47.75, DRIVE_SPEED, true);
   chassis.wait_drive();
   mogo.set_value(false);
   pros::delay(400);
   chassis.set_turn_pid(-25, TURN_SPEED);
   chassis.wait_drive();
-  intake.move_voltage(-12000);
+  intake1.move_voltage(-12000);
   chassis.set_drive_pid(28.73, DRIVE_SPEED, true);
   chassis.wait_drive();
   pros::delay(400);
   chassis.set_turn_pid(95, TURN_SPEED);
   chassis.wait_drive();
-  intake.move_voltage(-12000);
+  intake1.move_voltage(-12000);
   pros::delay(300);
   chassis.set_drive_pid(16.5, DRIVE_SPEED, true);
   chassis.wait_drive();
@@ -183,32 +182,32 @@ void drive_and_turn() {
   chassis.wait_drive();
   chassis.set_drive_pid(-4.75, DRIVE_SPEED, true);
   chassis.wait_drive();
-  intake.move_voltage(-12000);
+  intake1.move_voltage(-12000);
   pros::delay(600);
-  intake.move_voltage(0);
+  intake1.move_voltage(0);
   //ALLIANCE STAKE
-   intake.move_voltage(12000);
+   intake1.move_voltage(12000);
   chassis.set_drive_pid(13, DRIVE_SPEED, true);
   chassis.wait_drive();
   mogo.set_value(true);
   chassis.set_turn_pid(138, TURN_SPEED);
   chassis.wait_drive();
-  intake.move_voltage(0);
+  intake1.move_voltage(0);
   chassis.set_drive_pid(-47.75, DRIVE_SPEED, true);
   chassis.wait_drive();
   mogo.set_value(false);
   pros::delay(400);
   chassis.set_turn_pid(45, TURN_SPEED);
   chassis.wait_drive();
-  intake.move_voltage(-12000);
+  intake1.move_voltage(-12000);
   chassis.set_drive_pid(28.73, DRIVE_SPEED, true);
   chassis.wait_drive();
   pros::delay(200);
   chassis.set_turn_pid(-95, TURN_SPEED);
   chassis.wait_drive();
-  intake.move_voltage(12000);
+  intake1.move_voltage(12000);
   pros::delay(100);
-  intake.move_voltage(-12000);
+  intake1.move_voltage(-12000);
   chassis.set_drive_pid(25, DRIVE_SPEED, true);
   chassis.wait_drive();
   pros::delay(700);
@@ -232,24 +231,24 @@ void drive_and_turn() {
   chassis.wait_drive();
   chassis.set_drive_pid(-4.5, DRIVE_SPEED, true);
   chassis.wait_drive();
-  intake.move_voltage(-12000);
+  intake1.move_voltage(-12000);
   pros::delay(600);
-  intake.move_voltage(0);
+  intake1.move_voltage(0);
   //ALLIANCE STAKE
-   intake.move_voltage(12000);
+   intake1.move_voltage(12000);
   chassis.set_drive_pid(13, DRIVE_SPEED, true);
   chassis.wait_drive();
   mogo.set_value(true);
   chassis.set_turn_pid(-132, TURN_SPEED);
   chassis.wait_drive();
-  intake.move_voltage(0);
+  intake1.move_voltage(0);
   chassis.set_drive_pid(-47.75, DRIVE_SPEED, true);
   chassis.wait_drive();
   mogo.set_value(false);
   pros::delay(400);
   chassis.set_turn_pid(-25, TURN_SPEED);
   chassis.wait_drive();
-  intake.move_voltage(-12000);
+  intake1.move_voltage(-12000);
   chassis.set_drive_pid(28.73, DRIVE_SPEED, true);
   chassis.wait_drive();
   pros::delay(400);
@@ -260,12 +259,68 @@ void drive_and_turn() {
   pros::delay(500);
   }
 	void Skills(){    
-  intake.move_voltage(-12000);
-  pros::delay(100);
-  chassis.set_drive_pid(90, DRIVE_SPEED, true);
-  chassis.wait_drive();
+  intake_speed = -127;
+  }
+
+  void goalrush(){  
+    doinker.set_value(true);
+    intake_speed = -127;                                                            
+    chassis.set_drive_pid(41, DRIVE_SPEED, true);
+    chassis.wait_drive();
+    doinker.set_value(false);
+    pros::delay(75);
+    intake_speed = 0;
+    chassis.set_drive_pid(-20, DRIVE_SPEED, true);
+    chassis.wait_drive();
+    doinker.set_value(true);
+    chassis.set_drive_pid(-7, DRIVE_SPEED, true);
+    chassis.wait_drive();
+    doinker.set_value(false);
+    chassis.set_turn_pid(170, TURN_SPEED);
+    chassis.wait_drive();
+    chassis.set_drive_pid(-20, DRIVE_SPEED, true);
+    chassis.wait_drive();
+    chassis.set_drive_pid(-3, DRIVE_SPEED, true);
+    chassis.wait_drive();
+    mogo.set_value(true);
+    pros::delay(600);
+    intake_speed = -127;
+    chassis.set_turn_pid(-100, TURN_SPEED);
+    chassis.wait_drive();
+    chassis.set_drive_pid(-15, DRIVE_SPEED, true);
+    mogo.set_value(false);
+    intake_speed = 0;
+    chassis.set_turn_pid(30, TURN_SPEED);
+    chassis.wait_drive();
+    chassis.set_drive_pid(-23, DRIVE_SPEED, true);
+    chassis.wait_drive();
+    mogo.set_value(true);
+    chassis.set_turn_pid(145, TURN_SPEED);
+    chassis.wait_drive();
+    intake_speed = -127;
+    chassis.set_drive_pid(23, DRIVE_SPEED, true);
+    chassis.wait_drive();
+    chassis.set_turn_pid(105, TURN_SPEED);
+    chassis.wait_drive();
+    doinker.set_value(true);
+    chassis.set_drive_pid(30, DRIVE_SPEED, true);
+    chassis.wait_drive();
+    chassis.set_turn_pid(300, TURN_SPEED);
+    chassis.wait_drive();
+    nextState();
+    nextState();
+    chassis.set_drive_pid(55, DRIVE_SPEED, true);
+    chassis.wait_drive();
+  }
+
+  void bluegoalrush(){
 
   }
+
+  void redElims(){
+
+  }
+
 	void test(){
     
   }
@@ -276,7 +331,6 @@ void drive_and_turn() {
 ///
 void wait_until_change_speed() {
   // wait_until will wait until the robot gets to a desired position
-
 
   // When the robot gets to 6 inches, the robot will travel the remaining distance at a max speed of 40
   chassis.set_drive_pid(24, DRIVE_SPEED, true);

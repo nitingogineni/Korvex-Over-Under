@@ -58,7 +58,10 @@ enum class autonStates { // the possible auton selections
 	off,
 	solowp,
 	safewp,
+  goalrush,
+  bluegoalrush,
 	Elims,
+  redElims,
 	Skills,
 	test
 };
@@ -68,20 +71,37 @@ autonStates autonSelection = autonStates::off;
 
 static lv_res_t BlueLeftBtnAction(lv_obj_t *btn) {
     autonSelection = autonStates::safewp;
-    std::cout << pros::millis() << "BlueRight" << std::endl;
+    std::cout << pros::millis() << "BlueLeft" << std::endl;
     return LV_RES_OK;
 }
 
-static lv_res_t BlueRightBtnAction(lv_obj_t *btn) {
+static lv_res_t RedRightBtnAction(lv_obj_t *btn) {
 	autonSelection = autonStates::solowp;
-	std::cout << pros::millis() << "BlueRight" << std::endl;
+	std::cout << pros::millis() << "RedRight" << std::endl;
 	return LV_RES_OK;
 }
 
+static lv_res_t RedSoloWPBtnAction(lv_obj_t *btn) {
+	autonSelection = autonStates::redElims;
+	std::cout << pros::millis() << "RedSoloWP" << std::endl;
+	return LV_RES_OK;
+}
+
+static lv_res_t RedLeftBtnAction(lv_obj_t *btn) {
+	autonSelection = autonStates::goalrush;
+	std::cout << pros::millis() << "RedLeft" << std::endl;
+	return LV_RES_OK;
+}
 
 static lv_res_t BlueSoloWPBtnAction(lv_obj_t *btn) {
 	autonSelection = autonStates::Elims;
 	std::cout << pros::millis() << "BlueSoloWP" << std::endl;
+	return LV_RES_OK;
+}
+
+static lv_res_t BlueRightBtnAction(lv_obj_t *btn) {
+	autonSelection = autonStates::bluegoalrush;
+	std::cout << pros::millis() << "BlueRight" << std::endl;
 	return LV_RES_OK;
 }
 
@@ -129,6 +149,7 @@ void initialize() {
     });
 
 
+
 	
   // Print our branding over your terminal :D
   
@@ -174,26 +195,46 @@ void initialize() {
 	lv_obj_t *labelBlueSolo = lv_label_create(BlueSoloWPBtn, NULL);
 
 	lv_label_set_text(labelBlueLeft, "safewp");
-    lv_btn_set_action(BlueLeftBtn, LV_BTN_ACTION_CLICK, BlueLeftBtnAction);
-    lv_obj_set_size(BlueLeftBtn, 150, 50);
-    lv_btnm_set_toggle(BlueLeftBtn, true, 1);
-    lv_obj_set_pos(BlueLeftBtn, 0, 0);
-    lv_obj_align(BlueLeftBtn, NULL, LV_ALIGN_CENTER, -150, -5);
+  lv_btn_set_action(BlueLeftBtn, LV_BTN_ACTION_CLICK, BlueLeftBtnAction);
+  lv_obj_set_size(BlueLeftBtn, 150, 50);
+  lv_btnm_set_toggle(BlueLeftBtn, true, 1);
+  lv_obj_set_pos(BlueLeftBtn, 0, 0);
+  lv_obj_align(BlueLeftBtn, NULL, LV_ALIGN_CENTER, -150, 0);
 
+	lv_label_set_text(labelRedRight, "solowp");
+	lv_btn_set_action(RedRightBtn, LV_BTN_ACTION_CLICK, RedRightBtnAction);
+	lv_obj_set_size(RedRightBtn, 150, 50);
+	lv_btnm_set_toggle(RedRightBtn, true, 1);
+	lv_obj_set_pos(RedRightBtn, 0, 0);
+	lv_obj_align(RedRightBtn, NULL, LV_ALIGN_CENTER, 0, 0);
 
-	lv_label_set_text(labelBlueRight, "solowp");
-	lv_btn_set_action(BlueRightBtn, LV_BTN_ACTION_CLICK, BlueRightBtnAction);
-	lv_obj_set_size(BlueRightBtn, 150, 50);
-	lv_btnm_set_toggle(BlueRightBtn, true, 1);
-	lv_obj_set_pos(BlueRightBtn, 0, 0);
-	lv_obj_align(BlueRightBtn, NULL, LV_ALIGN_CENTER, 0, 0);
+  lv_label_set_text(labelRedLeft, "goalrush");
+	lv_btn_set_action(RedLeftBtn, LV_BTN_ACTION_CLICK, RedLeftBtnAction);
+	lv_obj_set_size(RedLeftBtn, 150, 50);
+	lv_btnm_set_toggle(RedLeftBtn, true, 1);
+	lv_obj_set_pos(RedLeftBtn, 0, 0);
+	lv_obj_align(RedLeftBtn, NULL, LV_ALIGN_CENTER, -150, 0);
+  
+  lv_label_set_text(labelBlueRight, "bluegoalrush");
+  lv_btn_set_action(BlueRightBtn, LV_BTN_ACTION_CLICK, BlueRightBtnAction);
+  lv_obj_set_size(BlueRightBtn, 150, 50);
+  lv_btnm_set_toggle(BlueRightBtn, true, 1);
+  lv_obj_set_pos(BlueRightBtn, 0, 0);
+  lv_obj_align(BlueRightBtn, NULL, LV_ALIGN_CENTER, 0, 0);
+
+  lv_label_set_text(labelRedSolo, "redElims");
+  lv_btn_set_action(RedSoloWPBtn, LV_BTN_ACTION_CLICK, RedLeftBtnAction);
+  lv_obj_set_size(RedSoloWPBtn, 150, 50);
+  lv_btnm_set_toggle(RedSoloWPBtn, true, 1);
+  lv_obj_set_pos(RedSoloWPBtn, 0, 0);
+  lv_obj_align(RedSoloWPBtn, NULL, LV_ALIGN_CENTER, 150, 0);
 
 	lv_label_set_text(labelBlueSolo, "Elims");
 	lv_btn_set_action(BlueSoloWPBtn, LV_BTN_ACTION_CLICK, BlueSoloWPBtnAction);
 	lv_obj_set_size(BlueSoloWPBtn, 150, 50);
 	lv_btnm_set_toggle(BlueSoloWPBtn, true, 1);
 	lv_obj_set_pos(BlueSoloWPBtn, 0, 0);
-	lv_obj_align(BlueSoloWPBtn, NULL, LV_ALIGN_CENTER, 150, 12.5);
+	lv_obj_align(BlueSoloWPBtn, NULL, LV_ALIGN_CENTER, 150, 0);
 	
 
 	//DiagonalDouble tab
@@ -307,9 +348,17 @@ void autonomous() {
 			solowp();
 			break;
 
-		case autonStates::Elims:
-			Elims();
+    case autonStates::bluegoalrush:
+			bluegoalrush();
 			break;
+
+    case autonStates::goalrush:
+			goalrush();
+			break;
+    case autonStates::redElims:
+			redElims();
+      break;
+      
 		case autonStates::Skills:
 			Skills();
 			break;
@@ -320,7 +369,54 @@ void autonomous() {
 			break;
 	}
 }
+void sorting_task() {
+    pros::delay(2000);  // Set EZ-Template calibrate before this function starts running
+    colorsort.set_led_pwm(100);
+    bool isRedTeam = true;
+    pros::Optical colorsort(4);
+    colorsort.set_led_pwm(25);
+    bool isColorSortEnabled = true;
+    while (true) {
+      if (master.get_digital_new_press(DIGITAL_LEFT)){
+      if (isColorSortEnabled == true){
+        isColorSortEnabled = false;
+      }
+      else if (isColorSortEnabled == false) {
+        isColorSortEnabled = true;
+      }
+      }
+      int hue = colorsort.get_hue();
+      if (hue > 210 && isRedTeam) //blue is 240, red is 0 
+      if(colorsort.get_proximity() == 255)
+      if(isColorSortEnabled == true){
+        pros::delay(92.85);
+        intake1.move(0);
+        pros::delay(500);
+        intake1.move(-127);
+        pros::delay(50);
+        intake1.move(127);
 
+        printf("Hue: %d\n", hue);
+
+        intake1.move_voltage(-12000);
+
+      }
+      
+      else if (hue < 40 && !isRedTeam) //blue is 240, red is 0
+      if(colorsort.get_proximity() == 255)
+      if(isColorSortEnabled == true){
+        pros::delay(96.75);
+        intake1.move(0);
+        pros::delay(300);
+        intake1.move(127);
+        printf("Hue: %d\n", hue);
+        
+      }
+      intake1.move(intake_speed);
+      pros::delay(ez::util::DELAY_TIME);
+    }
+}
+pros::Task SORTING_TASK(sorting_task);
 
 
 /**
@@ -343,20 +439,21 @@ void opcontrol() {
   // This is preference to what you like to drive on.
   chassis.set_drive_brake(MOTOR_BRAKE_COAST);
   wallstake.set_brake_mode(MOTOR_BRAKE_HOLD);
-  pros::Motor intake(2);
-  pros::Motor wallstake(16);
-  pros::Rotation rotation_sensor(11);
+  pros::Motor intake1(2);
+  pros::Motor wallstake(11);
+  pros::Rotation rotation_sensor(16);
   pros::IMU imu(17);
   pros::ADIDigitalOut mogo('H', false);
   pros::ADIDigitalOut doinker('G', false);
   pros::Controller master(pros::E_CONTROLLER_MASTER);
+  bool isColorSortEnabled = true;
   while (true) {
   if (master.get_digital_new_press(DIGITAL_R1)) {
     nextState();
   }
-   if (master.get_digital_new_press(DIGITAL_R2)){
-    tip();
-   }
+  
+
+
     chassis.tank(); // Tank control
      //chassis.arcade_standard(ez::SPLIT); // Standard split arcade
      //chassis.arcade_standard(ez::SINGLE); // Standard single arcade
@@ -367,14 +464,14 @@ void opcontrol() {
     // Put more user control code here!
     // . . .
     // intake code
-    if(master.get_digital(DIGITAL_L2)){
-        intake.move_voltage(12000);
-    }  
-    else if(master.get_digital(DIGITAL_L1)){
-        intake.move_voltage(-12000);
+   if (master.get_digital(DIGITAL_L2)){
+       intake_speed = 127;
+      }
+   else if(master.get_digital(DIGITAL_L1)){
+       intake_speed = -127;
     }
     else{
-        intake.move_voltage(0);
+       intake_speed = 0;
     }
 
      
@@ -399,7 +496,6 @@ void opcontrol() {
 			clamp2 = false;
 		}
   }
-
     pros::delay(ez::util::DELAY_TIME); // This is used for timer calculations!  Keep this ez::util::DELAY_TIME
   
 
@@ -481,33 +577,37 @@ void opcontrol() {
 
 
 
-const int numStates = 3;
+const int numStates = 6;
 //make sure these are in centidegrees (1 degree = 100 centidegrees)
-int states[numStates] = {0, -2000, -14000};
+int states[numStates] = {0, -2300, -14000, -9000, -27000, -23000};
 int currState = 0;
 int target = 0;
 
 
 void nextState() {
     currState += 1;
-    if (currState == numStates) {
+    if (currState == numStates - 3) {
         currState = 0;
     }
     target = states[currState];
 }
 
+
+
 void liftControl() {
-    double kp = 0.05;
+    double kp = 0.02;
     double error = target - rotation_sensor.get_position();
     double velocity = kp * error;
     wallstake.move(velocity);
-}
-
-void tip(){
-  int tip_degree = {-20000};
-  rotation_sensor.get_position();
-  double kp = 0.05;
-
+    if (master.get_digital_new_press(DIGITAL_R2)) {
+      target = states[3];
+  }
+    if (master.get_digital_new_press(DIGITAL_B)) {
+      target = states[4];
+    }
+    if (master.get_digital_new_press(DIGITAL_DOWN)) {
+      target = states[5];
+    }
 }
 
 

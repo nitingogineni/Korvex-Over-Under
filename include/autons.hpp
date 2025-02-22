@@ -23,3 +23,6 @@ void safewp();
 void Elims();
 void Skills();
 void test();
+void goalrush();
+void bluegoalrush();
+void redElims();
