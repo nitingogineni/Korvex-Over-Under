@@ -259,7 +259,8 @@ void drive_and_turn() {
   pros::delay(500);
   }
 	void Skills(){    
-  intake_speed = -127;
+  
+  
   }
 
   void goalrush(){  
@@ -268,8 +269,8 @@ void drive_and_turn() {
     chassis.set_drive_pid(41, DRIVE_SPEED, true);
     chassis.wait_drive();
     doinker.set_value(false);
-    pros::delay(75);
     intake_speed = 0;
+    pros::delay(75);
     chassis.set_drive_pid(-20, DRIVE_SPEED, true);
     chassis.wait_drive();
     doinker.set_value(true);
@@ -285,22 +286,24 @@ void drive_and_turn() {
     mogo.set_value(true);
     pros::delay(600);
     intake_speed = -127;
-    chassis.set_turn_pid(-100, TURN_SPEED);
+    chassis.set_turn_pid(-80, TURN_SPEED);
     chassis.wait_drive();
     chassis.set_drive_pid(-15, DRIVE_SPEED, true);
     mogo.set_value(false);
     intake_speed = 0;
-    chassis.set_turn_pid(30, TURN_SPEED);
+    chassis.set_turn_pid(38, TURN_SPEED);
     chassis.wait_drive();
-    chassis.set_drive_pid(-23, DRIVE_SPEED, true);
+    chassis.set_drive_pid(-17, DRIVE_SPEED, true);
+    chassis.wait_drive();
+    chassis.set_drive_pid(-6, DRIVE_SPEED, true);
     chassis.wait_drive();
     mogo.set_value(true);
-    chassis.set_turn_pid(145, TURN_SPEED);
+    chassis.set_turn_pid(140, TURN_SPEED);
     chassis.wait_drive();
     intake_speed = -127;
     chassis.set_drive_pid(23, DRIVE_SPEED, true);
     chassis.wait_drive();
-    chassis.set_turn_pid(105, TURN_SPEED);
+    chassis.set_turn_pid(100, TURN_SPEED);
     chassis.wait_drive();
     doinker.set_value(true);
     chassis.set_drive_pid(30, DRIVE_SPEED, true);
@@ -309,7 +312,7 @@ void drive_and_turn() {
     chassis.wait_drive();
     nextState();
     nextState();
-    chassis.set_drive_pid(55, DRIVE_SPEED, true);
+    chassis.set_drive_pid(51, DRIVE_SPEED, true);
     chassis.wait_drive();
   }
 

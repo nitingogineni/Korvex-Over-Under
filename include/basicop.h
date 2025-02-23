@@ -3,6 +3,7 @@ extern void deployintake();
 extern void outtake();
 extern void intaketriball();
 inline bool isRedTeam = false;
+inline bool isBlueTeam = false;
 inline void selectRedTeam() {
     isRedTeam = true;
 }

@@ -372,7 +372,7 @@ void autonomous() {
 void sorting_task() {
     pros::delay(2000);  // Set EZ-Template calibrate before this function starts running
     colorsort.set_led_pwm(100);
-    bool isRedTeam = true;
+    bool isRedTeam = false;
     pros::Optical colorsort(4);
     colorsort.set_led_pwm(25);
     bool isColorSortEnabled = true;
@@ -402,12 +402,12 @@ void sorting_task() {
 
       }
       
-      else if (hue < 40 && !isRedTeam) //blue is 240, red is 0
-      if(colorsort.get_proximity() == 255)
-      if(isColorSortEnabled == true){
+      else if (hue < 40 && !isRedTeam){ //blue is 240, red is 0
+      //if(colorsort.get_proximity() == 255)
+      //if(isColorSortEnabled == true){
         pros::delay(96.75);
         intake1.move(0);
-        pros::delay(300);
+        pros::delay(1000);
         intake1.move(127);
         printf("Hue: %d\n", hue);
         
