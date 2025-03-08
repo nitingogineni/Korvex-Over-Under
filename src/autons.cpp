@@ -230,9 +230,9 @@ void drive_and_turn() {
     intake_speed = 0;
     target = states[5];
     pros::delay(600);
+    nextState();
     chassis.set_drive_pid(-5, DRIVE_SPEED, true);
     chassis.wait_until(-4);
-    nextState();
     chassis.set_turn_pid(-45, TURN_SPEED);
     chassis.wait_until(-44);
     chassis.set_drive_pid(-26, DRIVE_SPEED, true);
@@ -265,7 +265,7 @@ void drive_and_turn() {
     chassis.wait_until(-11);
     intake_speed = 0;
     mogo.set_value(true);
-    chassis.set_turn_pid(37, TURN_SPEED);
+    chassis.set_turn_pid(22, TURN_SPEED);
     chassis.wait_until(36);
     intake_speed = -127;
     chassis.set_drive_pid(26, DRIVE_SPEED, true);
