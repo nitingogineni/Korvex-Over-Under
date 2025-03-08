@@ -5,14 +5,13 @@
 /////
 
 
-const int DRIVE_SPEED = 110; // This is 110/127 (around 87% of max speed).  We don't suggest making this 127.
+const int DRIVE_SPEED = 127; // This is 110/127 (around 87% of max speed).  We don't suggest making this 127.
                              // If this is 127 and the robot tries to heading correct, it's only correcting by
                              // making one side slower.  When this is 87%, it's correcting by making one side
                              // faster and one side slower, giving better heading correction.
 const int TURN_SPEED  = 90;
 const int SWING_SPEED = 90;
-
-
+//make sure these are in centidegrees (1 degree = 100 centidegrees)
 ///
 // Constants
 ///
@@ -126,198 +125,490 @@ void drive_and_turn() {
 
 
   void solowp(){
-  mogo.set_value(false);
-  chassis.set_drive_pid(-20, DRIVE_SPEED, true);
-  chassis.wait_drive();
-  chassis.set_turn_pid(90, TURN_SPEED);
-  chassis.wait_drive();
-  chassis.set_drive_pid(-5, DRIVE_SPEED, true);
-  chassis.wait_drive();
-  intake1.move_voltage(-12000);
-  pros::delay(600);
-  intake1.move_voltage(0);
-  //ALLIANCE STAKE
-   intake1.move_voltage(12000);
-  chassis.set_drive_pid(13, DRIVE_SPEED, true);
-  chassis.wait_drive();
-  mogo.set_value(true);
-  chassis.set_turn_pid(-132, TURN_SPEED);
-  chassis.wait_drive();
-  intake1.move_voltage(0);
-  chassis.set_drive_pid(-47.75, DRIVE_SPEED, true);
-  chassis.wait_drive();
-  mogo.set_value(false);
-  pros::delay(400);
-  chassis.set_turn_pid(-25, TURN_SPEED);
-  chassis.wait_drive();
-  intake1.move_voltage(-12000);
-  chassis.set_drive_pid(28.73, DRIVE_SPEED, true);
-  chassis.wait_drive();
-  pros::delay(400);
-  chassis.set_turn_pid(95, TURN_SPEED);
-  chassis.wait_drive();
-  intake1.move_voltage(-12000);
-  pros::delay(300);
-  chassis.set_drive_pid(16.5, DRIVE_SPEED, true);
-  chassis.wait_drive();
-  pros::delay(950);
-  chassis.set_drive_pid(-15, DRIVE_SPEED, true);
-  chassis.wait_drive();
-  //wait
-  chassis.set_drive_pid(-7.5, DRIVE_SPEED, true);
-  chassis.wait_drive();
-  chassis.set_turn_pid(170, TURN_SPEED);
-  chassis.wait_drive();
-  chassis.set_drive_pid(45, DRIVE_SPEED, true);
-  chassis.wait_drive();
-  pros::delay(500);
+    nextState();
+    pros::delay(500);
+    intake_speed = -127;
+    pros::delay(1000);
+    intake_speed = 0;
+    pros::delay(1);
+    intake_speed = -127;
+    pros::delay(200);
+    intake_speed = 0;
+    target = states[5];
+    pros::delay(700);
+    nextState();
+    chassis.set_drive_pid(-5, DRIVE_SPEED, true);
+    chassis.wait_drive();
+    chassis.set_turn_pid(30, TURN_SPEED);
+    chassis.wait_drive();
+    chassis.set_drive_pid(-32, DRIVE_SPEED, true);
+    chassis.wait_drive();
+    chassis.set_drive_pid(-8, DRIVE_SPEED, true);
+    chassis.wait_drive();
+    mogo.set_value(true);
+    pros::delay(300);
+    nextState();
+    chassis.set_turn_pid(180, TURN_SPEED);
+    chassis.wait_drive();
+    intake_speed = -127;
+    chassis.set_drive_pid(21.75, DRIVE_SPEED, true);
+    chassis.wait_drive();
+    chassis.set_turn_pid(145, TURN_SPEED);
+    chassis.wait_drive();
+    chassis.set_drive_pid(8, DRIVE_SPEED, true);
+    chassis.wait_drive();
+    chassis.set_turn_pid(40, TURN_SPEED);
+    chassis.wait_drive();
+    chassis.set_drive_pid(30, DRIVE_SPEED, true);
+    chassis.wait_drive();
+    chassis.set_turn_pid(-140, TURN_SPEED);
+    chassis.wait_drive();
+    //nextState();
+    //nextState();
+    //chassis.set_drive_pid(35, DRIVE_SPEED, true);
+    //chassis.wait_drive();
+    intake_speed = 127;
+    pros::delay(300);
+    intake_speed = -127;
   }
 
 
   void safewp(){
-  mogo.set_value(false);
-  chassis.set_drive_pid(-19.5, DRIVE_SPEED, true);
-  chassis.wait_drive();
-  chassis.set_turn_pid(-90, TURN_SPEED);
-  chassis.wait_drive();
-  chassis.set_drive_pid(-4.75, DRIVE_SPEED, true);
-  chassis.wait_drive();
-  intake1.move_voltage(-12000);
-  pros::delay(600);
-  intake1.move_voltage(0);
-  //ALLIANCE STAKE
-   intake1.move_voltage(12000);
-  chassis.set_drive_pid(13, DRIVE_SPEED, true);
-  chassis.wait_drive();
-  mogo.set_value(true);
-  chassis.set_turn_pid(138, TURN_SPEED);
-  chassis.wait_drive();
-  intake1.move_voltage(0);
-  chassis.set_drive_pid(-47.75, DRIVE_SPEED, true);
-  chassis.wait_drive();
-  mogo.set_value(false);
-  pros::delay(400);
-  chassis.set_turn_pid(45, TURN_SPEED);
-  chassis.wait_drive();
-  intake1.move_voltage(-12000);
-  chassis.set_drive_pid(28.73, DRIVE_SPEED, true);
-  chassis.wait_drive();
-  pros::delay(200);
-  chassis.set_turn_pid(-95, TURN_SPEED);
-  chassis.wait_drive();
-  intake1.move_voltage(12000);
-  pros::delay(100);
-  intake1.move_voltage(-12000);
-  chassis.set_drive_pid(25, DRIVE_SPEED, true);
-  chassis.wait_drive();
-  pros::delay(700);
-  chassis.set_drive_pid(-15, DRIVE_SPEED, true);
-  chassis.wait_drive();
-  //wait
-  chassis.set_drive_pid(-7.5, DRIVE_SPEED, true);
-  chassis.wait_drive();
-  chassis.set_turn_pid(215, TURN_SPEED);
-  chassis.wait_drive();
-  chassis.set_drive_pid(38, DRIVE_SPEED, true);
-  chassis.wait_drive();
-  pros::delay(500);
+
+    nextState();
+    pros::delay(500);
+    intake_speed = -127;
+    pros::delay(1000);
+    intake_speed = 0;
+    pros::delay(1);
+    intake_speed = -127;
+    pros::delay(200);
+    intake_speed = 0;
+    target = states[5];
+    pros::delay(700);
+    nextState();
+    chassis.set_drive_pid(-5, DRIVE_SPEED, true);
+    chassis.wait_drive();
+    chassis.set_turn_pid(-45, TURN_SPEED);
+    chassis.wait_drive();
+    chassis.set_drive_pid(-32, DRIVE_SPEED, true);
+    chassis.wait_drive();
+    chassis.set_drive_pid(-8, DRIVE_SPEED, true);
+    chassis.wait_drive();
+    mogo.set_value(true);
+    pros::delay(300);
+    nextState();
+    chassis.set_turn_pid(160, TURN_SPEED);
+    chassis.wait_drive();
+    intake_speed = -127;
+    chassis.set_drive_pid(20, DRIVE_SPEED, true);
+    chassis.wait_drive();
+    chassis.set_turn_pid(215, TURN_SPEED);
+    chassis.wait_drive();
+    chassis.set_drive_pid(12, DRIVE_SPEED, true);
+    chassis.wait_drive();
+    chassis.set_turn_pid(320, TURN_SPEED);
+    chassis.wait_drive();
+    chassis.set_drive_pid(30, DRIVE_SPEED, true);
+    chassis.wait_drive();
+    chassis.set_turn_pid(80, TURN_SPEED);
+    chassis.wait_drive();
+    nextState();
+    nextState();
+    chassis.set_drive_pid(45, DRIVE_SPEED, true);
+    chassis.wait_drive();
+    intake_speed = 127;
+    pros::delay(300);
+    intake_speed = -127;
   }
   
   void Elims(){
-  mogo.set_value(false);
-  chassis.set_drive_pid(-19.50, DRIVE_SPEED, true);
-  chassis.wait_drive();
-  chassis.set_turn_pid(90, TURN_SPEED);
-  chassis.wait_drive();
-  chassis.set_drive_pid(-4.5, DRIVE_SPEED, true);
-  chassis.wait_drive();
-  intake1.move_voltage(-12000);
-  pros::delay(600);
-  intake1.move_voltage(0);
-  //ALLIANCE STAKE
-   intake1.move_voltage(12000);
-  chassis.set_drive_pid(13, DRIVE_SPEED, true);
-  chassis.wait_drive();
-  mogo.set_value(true);
-  chassis.set_turn_pid(-132, TURN_SPEED);
-  chassis.wait_drive();
-  intake1.move_voltage(0);
-  chassis.set_drive_pid(-47.75, DRIVE_SPEED, true);
-  chassis.wait_drive();
-  mogo.set_value(false);
-  pros::delay(400);
-  chassis.set_turn_pid(-25, TURN_SPEED);
-  chassis.wait_drive();
-  intake1.move_voltage(-12000);
-  chassis.set_drive_pid(28.73, DRIVE_SPEED, true);
-  chassis.wait_drive();
-  pros::delay(400);
-  chassis.set_turn_pid(170, TURN_SPEED);
-  chassis.wait_drive();
-  chassis.set_drive_pid(38, DRIVE_SPEED, true);
-  chassis.wait_drive();
-  pros::delay(500);
+    nextState();
+    pros::delay(300);
+    intake_speed = -127;
+    pros::delay(300);
+    intake_speed = 0;
+    target = states[5];
+    pros::delay(600);
+    chassis.set_drive_pid(-5, DRIVE_SPEED, true);
+    chassis.wait_until(-4);
+    nextState();
+    chassis.set_turn_pid(-45, TURN_SPEED);
+    chassis.wait_until(-44);
+    chassis.set_drive_pid(-26, DRIVE_SPEED, true);
+    chassis.wait_until(-25);
+    chassis.set_drive_pid(-14, DRIVE_SPEED, true);
+    chassis.wait_until(-13);
+    mogo.set_value(true);
+    pros::delay(300);
+    nextState();
+    chassis.set_turn_pid(-145, TURN_SPEED);
+    chassis.wait_until(-144);
+    intake_speed = -127;
+    chassis.set_drive_pid(18, DRIVE_SPEED, true);
+    chassis.wait_until(17);
+    chassis.set_turn_pid(-35, TURN_SPEED);
+    chassis.wait_until(-34);
+    chassis.set_drive_pid(30, DRIVE_SPEED, true);
+    chassis.wait_until(29);
+    chassis.set_turn_pid(35, TURN_SPEED);
+    chassis.wait_until(34); 
+    intake_speed = 0;
+    chassis.set_drive_pid(37, DRIVE_SPEED, true);
+    chassis.wait_until(35);
+    mogo.set_value(false);
+    chassis.set_turn_pid(-90, TURN_SPEED);
+    chassis.wait_until(-89);
+    chassis.set_drive_pid(-24, DRIVE_SPEED, true);
+    chassis.wait_until(-23);
+    chassis.set_drive_pid(-12, DRIVE_SPEED, true);
+    chassis.wait_until(-11);
+    intake_speed = 0;
+    mogo.set_value(true);
+    chassis.set_turn_pid(37, TURN_SPEED);
+    chassis.wait_until(36);
+    intake_speed = -127;
+    chassis.set_drive_pid(26, DRIVE_SPEED, true);
+    chassis.wait_until(25);
+    chassis.set_turn_pid(-160, TURN_SPEED);
+    chassis.wait_until(-159);
+    nextState();
+    nextState();
+    chassis.set_drive_pid(55, DRIVE_SPEED, true);
+    chassis.wait_until(54);
   }
-	void Skills(){    
-  
-  
+	void Skills(){                              
+    //intake on alliance stake                               
+    intake_speed = -127;
+    pros::delay(600);
+    intake_speed = 0;
+    chassis.set_drive_pid(13, DRIVE_SPEED, true);
+    chassis.wait_drive();
+    chassis.set_turn_pid(90, TURN_SPEED);
+    chassis.wait_drive();
+    chassis.set_drive_pid(-26, DRIVE_SPEED, true);
+    chassis.wait_drive();
+    chassis.set_drive_pid(-6, DRIVE_SPEED, true);
+    chassis.wait_drive();
+    //clamps goal
+    mogo.set_value(true);
+    chassis.set_turn_pid(20, TURN_SPEED);
+    chassis.wait_drive();
+    intake_speed = -127;
+    chassis.set_drive_pid(25, DRIVE_SPEED, true);
+    chassis.wait_drive();
+    chassis.set_turn_pid(-30, TURN_SPEED);
+    chassis.wait_drive();
+    //drive for 2nd ring
+    chassis.set_drive_pid(47, DRIVE_SPEED, true);
+    chassis.wait_drive();
+    nextState();
+    //intake ring for wallstake
+    chassis.set_turn_pid(-10, TURN_SPEED);
+    chassis.wait_drive();
+    intake_speed = 127;
+    pros::delay(100);
+    intake_speed = -127;
+    chassis.set_drive_pid(8, DRIVE_SPEED, true);
+    chassis.wait_drive();
+    intake_speed = 0;
+    intake_speed = -127;
+    chassis.set_turn_pid(-190, TURN_SPEED);
+    chassis.wait_drive();
+    pros::delay(300);
+    intake_speed = 0;
+    target = states[3];
+    pros::delay(100);
+    intake_speed = -127;
+    chassis.set_drive_pid(22.75, DRIVE_SPEED, true);
+    chassis.wait_drive();
+    chassis.set_turn_pid(-90, TURN_SPEED);
+    chassis.wait_drive();
+    chassis.set_drive_pid(16, DRIVE_SPEED, true);
+    chassis.wait_drive();
+    //wall stake
+    pros::delay(200);
+    target = states[5];
+    chassis.set_drive_pid(4, DRIVE_SPEED, true);
+    chassis.wait_drive();
+    pros::delay(500);
+    nextState();
+    chassis.set_drive_pid(-13, DRIVE_SPEED, true);
+    chassis.wait_drive();
+    chassis.set_turn_pid(-180, TURN_SPEED);
+    chassis.wait_drive();
+    intake_speed = 127;
+    pros::delay(100);
+    intake_speed = -127;
+    //drive and intake 3 rings
+    chassis.set_drive_pid(25, DRIVE_SPEED, true);
+    chassis.wait_drive();
+    chassis.set_drive_pid(25, DRIVE_SPEED, true);
+    chassis.wait_drive();
+    intake_speed = 127;
+    pros::delay(75);
+    intake_speed = -127;
+    chassis.set_drive_pid(10, DRIVE_SPEED, true);
+    chassis.wait_drive();
+    chassis.set_drive_pid(-14, DRIVE_SPEED, true);
+    chassis.wait_drive();
+    chassis.set_turn_pid(-135, TURN_SPEED);
+    chassis.wait_drive();
+    //intake 6th ring
+    chassis.set_drive_pid(10, DRIVE_SPEED, true);
+    chassis.wait_drive();
+    chassis.set_turn_pid(35, TURN_SPEED);
+    chassis.wait_drive();
+    pros::delay(100);
+    chassis.set_drive_pid(-9, DRIVE_SPEED, true);
+    chassis.wait_drive();
+    //drop goal in 1st corner
+    mogo.set_value(false);
+    intake_speed = 127;
+    chassis.set_drive_pid(10, DRIVE_SPEED, true);
+    chassis.wait_drive();
+    intake_speed = 0;
+    chassis.set_turn_pid(-90, TURN_SPEED);
+    chassis.wait_drive();
+    nextState();
+    chassis.set_drive_pid(-73, DRIVE_SPEED, true);
+    chassis.wait_drive();
+    chassis.set_drive_pid(-11, 60, true);
+    chassis.wait_drive();
+    //second goal
+    mogo.set_value(true);
+    pros::delay(200);
+    chassis.set_turn_pid(-16, TURN_SPEED);
+    chassis.wait_drive();
+    intake_speed = -127;
+    chassis.set_drive_pid(22, DRIVE_SPEED, true);
+    chassis.wait_drive();
+    chassis.set_turn_pid(40, TURN_SPEED);
+    chassis.wait_drive();
+    //drive for 2nd ring
+    chassis.set_drive_pid(43, DRIVE_SPEED, true);
+    chassis.wait_drive();
+    nextState();
+    //intake ring for wallstake
+    chassis.set_turn_pid(0, TURN_SPEED);
+    chassis.wait_drive();
+    intake_speed = 127;
+    pros::delay(100);
+    intake_speed = -127;
+    chassis.set_drive_pid(12, DRIVE_SPEED, true);
+    chassis.wait_drive();
+    chassis.set_turn_pid(190, TURN_SPEED);
+    chassis.wait_drive();
+    pros::delay(300);
+    intake_speed = 0;
+    target = states[3];
+    pros::delay(300);
+    intake_speed = -127;
+    chassis.set_drive_pid(18.5, DRIVE_SPEED, true);
+    chassis.wait_drive();
+    chassis.set_turn_pid(90, TURN_SPEED);
+    chassis.wait_drive();
+    chassis.set_drive_pid(14, DRIVE_SPEED, true);
+    chassis.wait_drive();
+    //wall stake
+    pros::delay(400);
+    target = states[5];
+    chassis.set_drive_pid(4, DRIVE_SPEED, true);
+    chassis.wait_drive();
+    pros::delay(500);
+    nextState();
+    chassis.set_drive_pid(-18, DRIVE_SPEED, true);
+    chassis.wait_drive();
+    chassis.set_turn_pid(180, TURN_SPEED);
+    chassis.wait_drive();
+    intake_speed = 127;
+    pros::delay(100);
+    intake_speed = -127;
+    //drive and intake 3 rings
+    chassis.set_drive_pid(25, DRIVE_SPEED, true);
+    chassis.wait_drive();
+    intake_speed = 127;
+    pros::delay(100);
+    intake_speed = -127;
+    chassis.set_drive_pid(25, DRIVE_SPEED, true);
+    chassis.wait_drive();
+    chassis.set_drive_pid(10, DRIVE_SPEED, true);
+    chassis.wait_drive();
+    chassis.set_drive_pid(-14, DRIVE_SPEED, true);
+    chassis.wait_drive();
+    chassis.set_turn_pid(135, TURN_SPEED);
+    chassis.wait_drive();
+    //intake 6th ring
+    chassis.set_drive_pid(10, DRIVE_SPEED, true);
+    chassis.wait_drive();
+    chassis.set_turn_pid(-35, TURN_SPEED);
+    chassis.wait_drive();
+    chassis.set_drive_pid(-13, DRIVE_SPEED, true);
+    chassis.wait_drive();
+    //drop goal in 1st corner
+    mogo.set_value(false);
+    intake_speed = 127;
+    chassis.set_drive_pid(25, DRIVE_SPEED, true);
+    chassis.wait_drive();
+    intake_speed = 0;
+    chassis.set_turn_pid(180, TURN_SPEED);
+    chassis.wait_drive();
+    chassis.set_drive_pid(-80, DRIVE_SPEED, true);
+    chassis.wait_drive();
+    chassis.set_turn_pid(135, TURN_SPEED);
+    chassis.wait_drive();
+    chassis.set_drive_pid(-20, DRIVE_SPEED, true);
+    chassis.wait_drive();
+    chassis.set_drive_pid(-10, 60, true);
+    chassis.wait_drive();
+    mogo.set_value(true);
+    chassis.set_turn_pid(-105, TURN_SPEED);
+    chassis.wait_drive();
+    chassis.set_drive_pid(-38, DRIVE_SPEED, true);
+    chassis.wait_drive();
+    mogo.set_value(false);
+    chassis.set_drive_pid(7, DRIVE_SPEED, true);
+    chassis.wait_drive();
+    chassis.set_turn_pid(90, TURN_SPEED);
+    chassis.wait_drive();
+    chassis.set_drive_pid(-75, DRIVE_SPEED, true);
+    chassis.wait_drive();
+    chassis.set_turn_pid(115, TURN_SPEED);
+    chassis.wait_drive();
+    chassis.set_drive_pid(-51, DRIVE_SPEED, true);
+    chassis.wait_drive();
+    chassis.set_drive_pid(-15, 60, true);
+    chassis.wait_drive();
+    chassis.set_drive_pid(40, DRIVE_SPEED, true);
+    chassis.wait_drive();
   }
 
-  void goalrush(){  
+  void goalrush(){ 
+    //goal rush 
     doinker.set_value(true);
-    intake_speed = -127;                                                            
-    chassis.set_drive_pid(41, DRIVE_SPEED, true);
+    intake_speed = -100;                                                            
+    chassis.set_drive_pid(42, DRIVE_SPEED, true);
     chassis.wait_drive();
     doinker.set_value(false);
     intake_speed = 0;
-    pros::delay(75);
-    chassis.set_drive_pid(-20, DRIVE_SPEED, true);
+    pros::delay(150);
+    chassis.set_drive_pid(-22, DRIVE_SPEED, true);
     chassis.wait_drive();
     doinker.set_value(true);
-    chassis.set_drive_pid(-7, DRIVE_SPEED, true);
+    pros::delay(100);
+    chassis.set_drive_pid(-9, DRIVE_SPEED, true);
     chassis.wait_drive();
     doinker.set_value(false);
+    //clamp and score
     chassis.set_turn_pid(170, TURN_SPEED);
     chassis.wait_drive();
-    chassis.set_drive_pid(-20, DRIVE_SPEED, true);
+    chassis.set_drive_pid(-16, DRIVE_SPEED, true);
     chassis.wait_drive();
     chassis.set_drive_pid(-3, DRIVE_SPEED, true);
     chassis.wait_drive();
     mogo.set_value(true);
-    pros::delay(600);
+    pros::delay(300);
     intake_speed = -127;
     chassis.set_turn_pid(-80, TURN_SPEED);
     chassis.wait_drive();
     chassis.set_drive_pid(-15, DRIVE_SPEED, true);
     mogo.set_value(false);
     intake_speed = 0;
-    chassis.set_turn_pid(38, TURN_SPEED);
+    chassis.set_drive_pid(7, DRIVE_SPEED, true);
     chassis.wait_drive();
-    chassis.set_drive_pid(-17, DRIVE_SPEED, true);
+    //clamp second goal
+    chassis.set_turn_pid(23, TURN_SPEED);
     chassis.wait_drive();
-    chassis.set_drive_pid(-6, DRIVE_SPEED, true);
+    chassis.set_drive_pid(-19, DRIVE_SPEED, true);
+    chassis.wait_drive();
+    chassis.set_drive_pid(-8, DRIVE_SPEED, true);
     chassis.wait_drive();
     mogo.set_value(true);
-    chassis.set_turn_pid(140, TURN_SPEED);
+    pros::delay(100);
+    chassis.set_turn_pid(135, TURN_SPEED);
     chassis.wait_drive();
+    //second goal ring
     intake_speed = -127;
     chassis.set_drive_pid(23, DRIVE_SPEED, true);
     chassis.wait_drive();
     chassis.set_turn_pid(100, TURN_SPEED);
     chassis.wait_drive();
-    doinker.set_value(true);
-    chassis.set_drive_pid(30, DRIVE_SPEED, true);
+    //corner clear
+    chassis.set_drive_pid(12, DRIVE_SPEED, true);
     chassis.wait_drive();
     chassis.set_turn_pid(300, TURN_SPEED);
     chassis.wait_drive();
+
+    intake_speed = 127;
+    //bar touch
     nextState();
     nextState();
-    chassis.set_drive_pid(51, DRIVE_SPEED, true);
+    intake_speed = -127;
+    chassis.set_drive_pid(56, DRIVE_SPEED, true);
     chassis.wait_drive();
   }
 
   void bluegoalrush(){
-
+   //goal rush 
+   doinker.set_value(true);
+   intake_speed = -100;                                                            
+   chassis.set_drive_pid(43, DRIVE_SPEED, true);
+   chassis.wait_drive();
+   doinker.set_value(false);
+   intake_speed = 0;
+   pros::delay(300);
+   chassis.set_drive_pid(-19, DRIVE_SPEED, true);
+   chassis.wait_drive();
+   doinker.set_value(true);
+   pros::delay(100);
+   chassis.set_drive_pid(-9, DRIVE_SPEED, true);
+   chassis.wait_drive();
+   doinker.set_value(false);
+   //clamp and score
+   chassis.set_turn_pid(167, TURN_SPEED);
+   chassis.wait_drive();
+   chassis.set_drive_pid(-19, DRIVE_SPEED, true);
+   chassis.wait_drive();
+   chassis.set_drive_pid(-3, DRIVE_SPEED, true);
+   chassis.wait_drive();
+   mogo.set_value(true);
+   pros::delay(300);
+   intake_speed = -127;
+   chassis.set_turn_pid(80, TURN_SPEED);
+   chassis.wait_drive();
+   chassis.set_drive_pid(-15, DRIVE_SPEED, true);
+   mogo.set_value(false);
+   intake_speed = 0;
+   //clamp second goal
+   chassis.set_turn_pid(-80, TURN_SPEED);
+   chassis.wait_drive();
+   chassis.set_drive_pid(-19.5, DRIVE_SPEED, true);
+   chassis.wait_drive();
+   chassis.set_drive_pid(-7, DRIVE_SPEED, true);
+   chassis.wait_drive();
+   mogo.set_value(true);
+   chassis.set_turn_pid(-190, TURN_SPEED);
+   chassis.wait_drive();
+   //second goal ring
+   intake_speed = -127;
+   chassis.set_drive_pid(26, DRIVE_SPEED, true);
+   chassis.wait_drive();
+   chassis.set_turn_pid(-135, TURN_SPEED);
+   chassis.wait_drive();
+   //corner clear
+   chassis.set_drive_pid(24, DRIVE_SPEED, true);
+   chassis.wait_drive();
+   chassis.set_turn_pid(20, TURN_SPEED);
+   chassis.wait_drive();
+   intake_speed = 127;
+   pros::delay(300);
+   intake_speed = -127;
+   //bar touch
+   nextState();
+   nextState();
+   intake_speed = 0;
+   chassis.set_drive_pid(52, DRIVE_SPEED, true);
+   chassis.wait_drive(); 
   }
 
   void redElims(){

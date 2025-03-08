@@ -355,6 +355,11 @@ void autonomous() {
     case autonStates::goalrush:
 			goalrush();
 			break;
+    
+    case autonStates::Elims:
+    Elims();
+    break;
+    
     case autonStates::redElims:
 			redElims();
       break;
@@ -372,7 +377,7 @@ void autonomous() {
 void sorting_task() {
     pros::delay(2000);  // Set EZ-Template calibrate before this function starts running
     colorsort.set_led_pwm(100);
-    bool isRedTeam = false;
+    bool isRedTeam = true;
     pros::Optical colorsort(4);
     colorsort.set_led_pwm(25);
     bool isColorSortEnabled = true;
@@ -386,7 +391,8 @@ void sorting_task() {
       }
       }
       int hue = colorsort.get_hue();
-      if (hue > 210 && isRedTeam) //blue is 240, red is 0 
+      if (colorsort.get_hue()>180 && colorsort.get_hue()<230) //blue is 240, red is 0 
+      if(isRedTeam == true)
       if(colorsort.get_proximity() == 255)
       if(isColorSortEnabled == true){
         pros::delay(92.85);
@@ -401,15 +407,21 @@ void sorting_task() {
         intake1.move_voltage(-12000);
 
       }
-      
-      else if (hue < 40 && !isRedTeam){ //blue is 240, red is 0
-      //if(colorsort.get_proximity() == 255)
-      //if(isColorSortEnabled == true){
-        pros::delay(96.75);
+    
+      if (colorsort.get_hue()>0 && colorsort.get_hue()<40)//blue is 240, red is 0
+      if(isRedTeam == false)
+      if(colorsort.get_proximity() == 255)
+      if(isColorSortEnabled == true){
+        pros::delay(92.85);
         intake1.move(0);
-        pros::delay(1000);
+        pros::delay(500);
+        intake1.move(-127);
+        pros::delay(50);
         intake1.move(127);
+
         printf("Hue: %d\n", hue);
+
+        intake1.move_voltage(-12000);
         
       }
       intake1.move(intake_speed);
@@ -577,11 +589,11 @@ void opcontrol() {
 
 
 
-const int numStates = 6;
+//const int numStates = 6;
 //make sure these are in centidegrees (1 degree = 100 centidegrees)
-int states[numStates] = {0, -2300, -14000, -9000, -27000, -23000};
+//int states[numStates] = {0, -2300, -14000, -9000, -27000, -23000};
 int currState = 0;
-int target = 0;
+///int target = 0;
 
 
 void nextState() {
