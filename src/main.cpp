@@ -15,18 +15,18 @@ using namespace std;
 Drive chassis (
   // Left Chassis Ports (negati	cve port will reverse it!)
   //   the first port is the sensored port (when trackers are not used!)
-  {12, -3, -14}
+  {-18, -17, -19}
 
   // Right Chassis Ports (negative port will reverse it!)
   //   the first port is the sensored port (when trackers are not used!)
-  ,{-20, 19, 9}	
+  ,{16, 14, 12}	
 
   // IMU Port
   ,17
 
   // Wheel Diameter (Remember, 4" wheels are actually 4.125!)
   //    (or tracking wheel diameter)
-  ,2.75
+  ,3.25
 
   // Cartridge RPM
   //   (or tick per rotation if using tracking wheels)
@@ -451,7 +451,7 @@ void opcontrol() {
   // This is preference to what you like to drive on.
   chassis.set_drive_brake(MOTOR_BRAKE_COAST);
   wallstake.set_brake_mode(MOTOR_BRAKE_HOLD);
-  pros::Motor intake1(2);
+  pros::Motor intake1(20);
   pros::Motor wallstake(11);
   pros::Rotation rotation_sensor(16);
   pros::IMU imu(17);
