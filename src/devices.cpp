@@ -1,6 +1,6 @@
 #include "main.h"
 
-pros::Motor wallstake(11,pros::E_MOTOR_GEARSET_18, false);
+pros::Motor wallstake(10, pros::E_MOTOR_GEARSET_36, false);
 pros::Motor intake1(20, pros::E_MOTOR_GEARSET_06, false);
 
 pros::ADIDigitalOut mogo('H', false);
@@ -18,6 +18,6 @@ pros::Motor rB2(12, pros::E_MOTOR_GEARSET_06); // right back motor. port 16
 // motor groups
 pros::MotorGroup leftMotors({lF, lB2, lB}); // left motor group
 pros::MotorGroup rightMotors({rF, rB2, rB}); // right motor group
-pros::Imu imu(17);
-pros::Rotation rotation_sensor(10);
+pros::Imu imu(8);
+pros::Rotation rotation_sensor(9);
 pros::Optical colorsort(4);

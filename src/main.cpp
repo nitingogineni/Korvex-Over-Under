@@ -22,7 +22,7 @@ Drive chassis (
   ,{16, 14, 12}	
 
   // IMU Port
-  ,17
+  ,8
 
   // Wheel Diameter (Remember, 4" wheels are actually 4.125!)
   //    (or tracking wheel diameter)
@@ -148,6 +148,7 @@ void initialize() {
         }
     });
 
+    rotation_sensor.reset_position();
 
 
 	
@@ -452,9 +453,9 @@ void opcontrol() {
   chassis.set_drive_brake(MOTOR_BRAKE_COAST);
   wallstake.set_brake_mode(MOTOR_BRAKE_HOLD);
   pros::Motor intake1(20);
-  pros::Motor wallstake(11);
-  pros::Rotation rotation_sensor(16);
-  pros::IMU imu(17);
+  pros::Motor wallstake(10);
+  pros::Rotation rotation_sensor(9);
+  pros::IMU imu(8);
   pros::ADIDigitalOut mogo('H', false);
   pros::ADIDigitalOut doinker('G', false);
   pros::Controller master(pros::E_CONTROLLER_MASTER);
@@ -514,86 +515,11 @@ void opcontrol() {
 }
 
 }
-
-//}
-
-	// // Constants for lift positions
-
-	// const double FIRST_RING_LIFT_VALUE = -0.095*360*100;
-    // const double MAX_LIFT_VALUE = -0.43 * 360 * 100;
-
-    // void manualLiftControl() {
-    // double currentLiftPosition = rotation_sensor.get_position();   // Get current lift position
-    //     if (master.get_digital(pros::E_CONTROLLER_DIGITAL_A)) {
-    //         // Move the lift down, allowing mvoement as long as it's above 0 degrees
-    //         if (currentLiftPosition > MAX_LIFT_VALUE) {
-    //             wallstake.move_velocity(127); // Move lift down
-    //             wallstake1.move_velocity(-127);
-    //         } else {
-    //             // Stop the lift if it tries to go below 0 degrees
-    //             wallstake.move_velocity(0);
-    //             wallstake1.move_velocity(0);
-    //         }
-    //     } else if (master.get_digital(pros::E_CONTROLLER_DIGITAL_X)) {
-	// 		pros::ADIDigitalOut doinker('G', false);
-    //         	wallstake.move_velocity(-127); // Move lift up
-    //         	wallstake1.move_velocity(127);
-    //     } else {
-    //         wallstake.move_velocity(0);
-    //         wallstake1.move_velocity(0);
-
-    //     }
-    // }
-    // void setLift(int val) {
-    //     wallstake.move(val);
-    //     wallstake1.move(val);
-    // }
-
-
-	// Constants for lift positions
-
-//const double FIRST_RING_LIFT_VALUE =  -48.77* 360 * 100; 
-//.const double MAX_LIFT_VALUE =  -0.9* 360 * 100;
-
-//void manualLiftControl() {
-  //  double currentLiftPosition = rotation_sensor.get_position();  // Get current lift position
-   // if (master.get_digital(pros::E_CONTROLLER_DIGITAL_DOWN)) {
-         //Move the lift down, allowing movement as long as it's above 0 degrees
-       //     wallstake.move_velocity(127);  // Move lift down
-          
-  
-   // } else if (master.get_digital(pros::E_CONTROLLER_DIGITAL_B)) {
-     //       wallstake.move_velocity(-127);  // Move lift up
-                  
- //   }
-          //wallstake.move_voltage(0);
-        
-    //}
-//}
-
-//void setLift(int input) {
-  //wallstake.move(input);
-//}
-
-
-//PID liftPID{2, 0.45, 20, 0, "Lift"};
-
-
-//void liftControl() {
-  //if (master.get_digital(pros::E_CONTROLLER_DIGITAL_R1)) { 
-    //liftPID.set_target(FIRST_RING_LIFT_VALUE);
-    //setLift(liftPID.compute(rotation_sensor.get_position()));
-  //} else {    manualLiftControl();
-  //}
-//}
-
-
-
 //const int numStates = 6;
 //make sure these are in centidegrees (1 degree = 100 centidegrees)
 //int states[numStates] = {0, -2300, -14000, -9000, -27000, -23000};
 int currState = 0;
-///int target = 0;
+//int target = 0;
 
 
 void nextState() {
