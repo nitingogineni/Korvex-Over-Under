@@ -8,6 +8,8 @@ extern pros::Optical colorsort;
 
 extern pros::ADIDigitalOut mogo;
 extern pros::ADIDigitalOut doinker;
+extern pros::ADIDigitalOut intakelift;
+extern pros::ADIDigitalOut Goalrush;
 extern pros::Motor lF;
 extern pros::Motor lB;
 extern pros::Motor lB2;

@@ -1,7 +1,4 @@
 #include "main.h"
-extern void deployintake();
-extern void outtake();
-extern void intaketriball();
 inline bool isRedTeam = false;
 inline void selectRedTeam() {
     isRedTeam = true;
@@ -13,4 +10,4 @@ inline void selectBlueTeam(){
 inline int intake_speed;
 inline int target = 0;
 inline const int numStates = 6;
-inline int states[numStates] = {0, -1000, -1500, -9000, -27000, -23000};
+inline int states[numStates] = {0, -4800, -15500, -9500, -27000, -23000};

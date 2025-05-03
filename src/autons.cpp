@@ -9,7 +9,7 @@ const int DRIVE_SPEED = 127; // This is 110/127 (around 87% of max speed).  We d
                              // If this is 127 and the robot tries to heading correct, it's only correcting by
                              // making one side slower.  When this is 87%, it's correcting by making one side
                              // faster and one side slower, giving better heading correction.
-const int TURN_SPEED  = 90;
+const int TURN_SPEED  = 127;
 const int SWING_SPEED = 90;
 //make sure these are in centidegrees (1 degree = 100 centidegrees)
 ///
@@ -125,50 +125,68 @@ void drive_and_turn() {
 
 
   void solowp(){
-    nextState();
-    pros::delay(500);
-    intake_speed = -127;
-    pros::delay(1000);
-    intake_speed = 0;
-    pros::delay(1);
-    intake_speed = -127;
-    pros::delay(200);
-    intake_speed = 0;
-    target = states[5];
-    pros::delay(700);
-    nextState();
-    chassis.set_drive_pid(-5, DRIVE_SPEED, true);
-    chassis.wait_drive();
-    chassis.set_turn_pid(50, TURN_SPEED);
-    chassis.wait_drive();
-    chassis.set_drive_pid(-32, DRIVE_SPEED, true);
-    chassis.wait_drive();
-    chassis.set_drive_pid(-8, DRIVE_SPEED, true);
-    chassis.wait_drive();
-    mogo.set_value(true);
-    pros::delay(300);
-    nextState();
-    chassis.set_turn_pid(180, TURN_SPEED);
-    chassis.wait_drive();
-    intake_speed = -127;
-    chassis.set_drive_pid(22.75, DRIVE_SPEED, true);
-    chassis.wait_drive();
-    chassis.set_turn_pid(145, TURN_SPEED);
-    chassis.wait_drive();
-    chassis.set_drive_pid(10, DRIVE_SPEED, true);
-    chassis.wait_drive();
-    chassis.set_turn_pid(40, TURN_SPEED);
-    chassis.wait_drive();
-    chassis.set_drive_pid(40, DRIVE_SPEED, true);
-    chassis.wait_drive();
-    //nextState();
-    //nextState();
-    //chassis.set_drive_pid(35, DRIVE_SPEED, true);
-    //chassis.wait_drive();
-    intake_speed = 127;
-    pros::delay(300);
-    intake_speed = -127;
-  }
+  Goalrush.set_value(true);
+  target = states[3];
+  intake_speed = -127;
+  chassis.set_drive_pid(38, DRIVE_SPEED, true);
+  chassis.wait_until(34);
+  intake_speed = 0;
+  chassis.set_drive_pid(-20, DRIVE_SPEED, true);
+  chassis.wait_until(-16);
+  chassis.set_turn_pid(170, 50);
+  chassis.wait_until(167);
+  mogo.set_value(false);
+  chassis.set_drive_pid(-25, 70, true);
+  chassis.wait_until(-13);
+  mogo.set_value(true);
+  pros::delay(200);
+  intake_speed = -127;
+  chassis.set_turn_pid(133, TURN_SPEED);
+  chassis.wait_until(130);
+  Goalrush.set_value(false);
+  chassis.set_drive_pid(30, DRIVE_SPEED, true);
+  chassis.wait_until(27);
+  mogo.set_value(false);
+  chassis.set_drive_pid(20, DRIVE_SPEED, true);
+  chassis.wait_until(17);
+  chassis.set_drive_pid(-4, DRIVE_SPEED, true);
+  chassis.wait_until(-1);
+  intake_speed = 0;
+  chassis.set_turn_pid(115, TURN_SPEED);
+  chassis.wait_until(112);
+  chassis.set_drive_pid(-48, DRIVE_SPEED, true);
+  chassis.wait_until(-46);
+  mogo.set_value(true);
+  pros::delay(200);
+  intake_speed = -127;
+  chassis.set_turn_pid(194, TURN_SPEED);
+  chassis.wait_until(191);
+  chassis.set_drive_pid(25, DRIVE_SPEED, true);
+  chassis.wait_until(22);
+  doinker.set_value(true);
+  chassis.set_drive_pid(-9, DRIVE_SPEED, true);
+  chassis.wait_until(-6);
+  chassis.set_turn_pid(160, TURN_SPEED);
+  chassis.wait_until(155);
+  chassis.set_drive_pid(19, DRIVE_SPEED, true);
+  chassis.wait_until(16);
+  doinker.set_value(false);
+  chassis.set_turn_pid(200, TURN_SPEED);
+  chassis.wait_until(195);
+  chassis.set_drive_pid(15, DRIVE_SPEED, true);
+  chassis.wait_until(12);
+  target = states[5];
+  pros::delay(400);
+  nextState();
+  chassis.set_drive_pid(-40, DRIVE_SPEED, true);
+  chassis.wait_until(-37);
+  chassis.set_turn_pid(65, TURN_SPEED);
+  chassis.wait_until(152);
+  chassis.set_drive_pid(-25, DRIVE_SPEED, true);
+  chassis.wait_until(-22);
+
+  
+}
 
 
   void safewp(){
@@ -626,7 +644,7 @@ void drive_and_turn() {
   }
 
   void redElims(){
-
+  nextState();
   }
 
 	void test(){
